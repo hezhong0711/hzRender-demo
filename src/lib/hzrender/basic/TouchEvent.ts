@@ -6,6 +6,7 @@ export class TouchEvent {
     private scale: number = 1;
     private lastTimeStamp: number = 0;
     onScale: Function | undefined;
+    onTap: Function | undefined;
 
     constructor(private id: string) {
         uni.$on(EventFul.getEventName(EventType.onTouchStart, this.id), (event) => {
@@ -24,6 +25,14 @@ export class TouchEvent {
             if (this.onScale) {
                 if (this.requestAnimationFrame(ev.timestamp)) {
                     this.onScale(this.scale, this.scale);
+                }
+            }
+        });
+
+        this.anyTouch.on('tap', ev => {
+            if (this.onTap) {
+                if (this.requestAnimationFrame(ev.timestamp)) {
+                    this.onTap(ev.x, ev.y, this.scale);
                 }
             }
         });

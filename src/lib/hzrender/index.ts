@@ -6,12 +6,15 @@ export let drawIndex = () => {
         id: 'main',
         width: 300,
         height: 150,
-        touchEventCfg:{}
+        touchEventCfg: {}
     });
 
     let circle = new Circle({
         cx: 10,
         cy: 10,
+        onTap: () => {
+            console.log('click circle');
+        }
     });
     hz.add(circle);
     hz.render();

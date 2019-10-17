@@ -21,10 +21,11 @@ export class Circle extends Displayable {
         context.fill();
     }
 
-    contain(x: number, y: number): boolean {
-        let p = new Coordinate(x, y);
-        let distance = Geometry.calcDistance(p, this.c);
-        return distance <= this.r;
+    contain(x: number, y: number, scale: number): boolean {
+        let p1 = new Coordinate(x, y);
+        let p2 = new Coordinate(this.c.x * scale, this.c.y * scale);
+        let distance = Geometry.calcDistance(p1, p2);
+        return distance <= this.r * scale;
     }
 }
 

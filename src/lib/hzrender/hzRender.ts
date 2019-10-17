@@ -32,12 +32,13 @@ export class hzRender {
 
     add(shape: Displayable) {
         this.list.push(shape);
-    }
 
-    render() {
         this.list.sort((a, b) => {
             return a.zIndex - b.zIndex;
         });
+    }
+
+    render() {
 
         this.list.forEach(item => {
             item.draw(this.context);
@@ -56,7 +57,16 @@ export class hzRender {
             this.context.scale(scalex, scaley);
             this.context.save();
             this.render();
-        }
+        };
+
+        this.touchEvent.onTap = (x: number, y: number, scale: number) => {
+            for (let obj of this.list) {
+                if (obj.contain(x, y, scale)) {
+                    obj.onTap();
+                    break;
+                }
+            }
+        };
     }
 
 }
