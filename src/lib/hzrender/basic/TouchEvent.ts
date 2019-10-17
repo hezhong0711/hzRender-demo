@@ -1,11 +1,10 @@
 import EventFul, {EventType} from "@/lib/hzrender/basic/EventFul";
-import {Coordinate} from "@/lib/hzrender/tool/geometry";
 import AnyTouch from "any-touch";
 
 export class TouchEvent {
     anyTouch = new AnyTouch();
     private scale: number = 1;
-    private lastTimeStemp: number = 0;
+    private lastTimeStamp: number = 0;
     onScale: Function | undefined;
 
     constructor(private id: string) {
@@ -44,9 +43,9 @@ export class TouchEvent {
     }
 
     private requestAnimationFrame = (currentTimeStemp: number) => {
-        let deltaTimeStemp = currentTimeStemp - this.lastTimeStemp;
-        if (deltaTimeStemp > 50) {
-            this.lastTimeStemp = currentTimeStemp;
+        let deltaTimeStamp = currentTimeStemp - this.lastTimeStamp;
+        if (deltaTimeStamp > 50) {
+            this.lastTimeStamp = currentTimeStemp;
             return true;
         }
         return false;
@@ -56,18 +55,4 @@ export class TouchEvent {
 
 export interface TouchEventCfg {
     scalable?: boolean;
-}
-
-export class ScalePosition {
-    p1: Coordinate;
-    p2: Coordinate;
-
-    constructor(x1: number, y1: number, x2: number, y2: number) {
-        this.p1 = new Coordinate(x1, y1);
-        this.p2 = new Coordinate(x2, y2);
-    }
-
-    getDistanceX() {
-        return Math.abs(this.p1.x - this.p2.x);
-    }
 }
