@@ -13,7 +13,6 @@
     import Vue from 'vue';
     import {drawIndex} from "@/lib/hzrender";
     import EventFul, {EventType} from "@/lib/hzrender/basic/EventFul";
-    import AnyTouch from "any-touch";
 
     export default Vue.extend({
         data() {

@@ -4,11 +4,8 @@ import AnyTouch from "any-touch";
 
 export class TouchEvent {
     anyTouch = new AnyTouch();
-    private initScalePosition: ScalePosition | undefined;
-    private initScale: number = 1;
     private scale: number = 1;
-    private curScalePosition: ScalePosition | undefined;
-    private curScale: number | undefined;
+    private lastTimeStemp: number = 0;
     onScale: Function | undefined;
 
     constructor(private id: string) {
@@ -26,7 +23,9 @@ export class TouchEvent {
             this.scale = this.scale * ev.deltaScale;
             console.log(this.scale);
             if (this.onScale) {
-                this.onScale(this.scale, this.scale);
+                if (this.requestAnimationFrame(ev.timestamp)) {
+                    this.onScale(this.scale, this.scale);
+                }
             }
         });
     }
@@ -42,6 +41,15 @@ export class TouchEvent {
             touch.clientY = touch.y;
         }
         return event;
+    }
+
+    private requestAnimationFrame = (currentTimeStemp: number) => {
+        let deltaTimeStemp = currentTimeStemp - this.lastTimeStemp;
+        if (deltaTimeStemp > 50) {
+            this.lastTimeStemp = currentTimeStemp;
+            return true;
+        }
+        return false;
     }
 
 }
