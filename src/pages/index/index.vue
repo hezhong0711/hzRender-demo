@@ -13,6 +13,7 @@
     import Vue from 'vue';
     import {drawIndex} from "@/lib/hzrender";
     import EventFul, {EventType} from "@/lib/hzrender/basic/EventFul";
+    import AnyTouch from "any-touch";
 
     export default Vue.extend({
         data() {
@@ -36,7 +37,7 @@
             onTouchEnd(event: any, id: string) {
                 uni.$emit(EventFul.getEventName(EventType.onTouchEnd, id), event);
             },
-            onTouchMove:(event:any, id:string)=>{
+            onTouchMove(event:any, id:string){
                 uni.$emit(EventFul.getEventName(EventType.onTouchMove, id), event);
             }
         }
