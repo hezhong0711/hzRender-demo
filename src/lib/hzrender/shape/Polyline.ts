@@ -7,6 +7,7 @@ export class Polyline extends Displayable {
     lineWidth?: number;
     lineColor?: string;
     lineGradient?: boolean;
+    isDash?: boolean;
 
     constructor(cfg: PolylineCfg) {
         super(cfg);
@@ -15,6 +16,7 @@ export class Polyline extends Displayable {
         this.lineWidth = cfg.lineWidth ? cfg.lineWidth : 1;
         this.lineGradient = cfg.lineGradient ? cfg.lineGradient : false;
         this.lineColor = cfg.lineColor ? cfg.lineColor : 'black';
+        this.isDash = cfg.isDash ? cfg.isDash : false;
     }
 
     contain(x: number, y: number): boolean {
@@ -34,8 +36,14 @@ export class Polyline extends Displayable {
 
         for (let i = 0; i < linePaths.length; i++) {
             context.beginPath();
-            context.setLineWidth(this.lineWidth);
             let path = linePaths[i];
+
+            if (this.isDash) {
+                context.setLineDash([4, 6]);
+            } else {
+                context.setLineDash([]);
+            }
+            context.setLineWidth(this.lineWidth);
             if (i === 0) {
                 context.moveTo(path.start.x, path.start.y);
             } else {
@@ -61,6 +69,11 @@ export class Polyline extends Displayable {
             context.beginPath();
             let path = catMullPaths[i];
             context.moveTo(path.start.x, path.start.y);
+            if (this.isDash) {
+                context.setLineDash([4, 6]);
+            } else {
+                context.setLineDash([]);
+            }
             context.setLineWidth(this.lineWidth);
             context.bezierCurveTo(path.ctrl1.x, path.ctrl1.y, path.ctrl2.x, path.ctrl2.y, path.end.x, path.end.y);
             if (this.lineGradient) {
@@ -73,7 +86,6 @@ export class Polyline extends Displayable {
             }
             context.stroke();
         }
-        // context.draw(true);
     }
 
     private getCatMullPaths() {
@@ -150,6 +162,7 @@ export class Polyline extends Displayable {
 
 interface PolylineCfg extends DisplayableCfg {
     points: Array<Point>;
+    isDash?: boolean;
     lineWidth?: number;
     lineColor?: string;
     lineGradient?: boolean;

@@ -19,6 +19,7 @@ export let drawIndex = () => {
             console.log('click circle');
         }
     });
+
     let rect = new Rect({
         px: 50,
         py: 30,
@@ -27,17 +28,21 @@ export let drawIndex = () => {
         color: '#343434',
         onTap: () => console.log('click rect')
     });
+
     let points: Array<Point> = [];
     points.push(new Point(5, 13, 'red'));
     points.push(new Point(105, 133, '#330033'));
     points.push(new Point(105, 13, '#234234'));
-    points.push(new Point(5, 23, '#229922'));
+    // points.push(new Point(5, 23, '#229922'));
     points.push(new Point(120, 133));
+
     let polyline = new Polyline({
         points: points,
         lineWidth: 2,
         smooth: 0,
-        lineGradient: true
+        // lineGradient: true,
+        isDash: false,
+        lineColor: 'blue'
     });
     hz.add(circle);
     hz.add(rect);
