@@ -15,17 +15,19 @@ export class Circle extends Displayable {
 
     draw(context: CanvasContext): void {
         context.beginPath();
-        context.arc(this.c.x, this.c.y, this.r, 0, 2 * Math.PI);
+        context.arc(this.c.x * this.scaleInfo.scale,
+            this.c.y * this.scaleInfo.scale,
+            this.r * this.scaleInfo.scale
+            , 0, 2 * Math.PI);
         context.setFillStyle(this.color);
-
         context.fill();
     }
 
-    contain(x: number, y: number, scale: number): boolean {
+    contain(x: number, y: number): boolean {
         let p1 = new Coordinate(x, y);
-        let p2 = new Coordinate(this.c.x * scale, this.c.y * scale);
+        let p2 = new Coordinate(this.c.x * this.scaleInfo.scale, this.c.y * this.scaleInfo.scale);
         let distance = Geometry.calcDistance(p1, p2);
-        return distance <= this.r * scale;
+        return distance <= this.r * this.scaleInfo.scale;
     }
 }
 

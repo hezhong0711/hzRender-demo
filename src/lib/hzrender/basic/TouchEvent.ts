@@ -22,19 +22,20 @@ export class TouchEvent {
         this.anyTouch.on('pinch', ev => {
             this.scale = this.scale * ev.deltaScale;
             console.log(this.scale);
-            if (this.onScale) {
-                if (this.requestAnimationFrame(ev.timestamp)) {
-                    this.onScale(this.scale, this.scale);
+
+            this.requestAnimationFrame(ev.timestamp, () => {
+                if (this.onScale) {
+                    this.onScale(this.scale);
                 }
-            }
+            });
         });
 
         this.anyTouch.on('tap', ev => {
-            if (this.onTap) {
-                if (this.requestAnimationFrame(ev.timestamp)) {
+            this.requestAnimationFrame(ev.timestamp, () => {
+                if (this.onTap) {
                     this.onTap(ev.x, ev.y, this.scale);
                 }
-            }
+            });
         });
     }
 
@@ -51,13 +52,12 @@ export class TouchEvent {
         return event;
     }
 
-    private requestAnimationFrame = (currentTimeStemp: number) => {
+    private requestAnimationFrame = (currentTimeStemp: number, callback: () => void) => {
         let deltaTimeStamp = currentTimeStemp - this.lastTimeStamp;
         if (deltaTimeStamp > 50) {
             this.lastTimeStamp = currentTimeStemp;
-            return true;
+            callback();
         }
-        return false;
     }
 
 }

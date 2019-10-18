@@ -38,34 +38,54 @@ export class hzRender {
         });
     }
 
-    render() {
+    clear() {
+        this.context.clearRect(0, 0, this.width, this.height);
+        this.context.draw()
+    }
 
+    render() {
         this.list.forEach(item => {
             item.draw(this.context);
         });
 
         this.context.draw();
+
+        setTimeout(() => {
+            this.onScale(1.5);
+        }, 1000);
     }
 
     destory() {
 
     }
 
+    private onScale(scale: number) {
+        this.context.scale(scale, scale);
+        for (let obj of this.list) {
+            obj.scale(scale);
+        }
+        this.clear();
+        this.render();
+    }
+
+    private onTap(x: number, y: number) {
+        for (let obj of this.list) {
+            if (obj.contain(x, y)) {
+                if (obj.onTap) {
+                    obj.onTap();
+                }
+                break;
+            }
+        }
+    }
+
     private registerEvent() {
         this.touchEvent = new TouchEvent(this.id);
-        this.touchEvent.onScale = (scalex: number, scaley: number) => {
-            this.context.scale(scalex, scaley);
-            this.context.save();
-            this.render();
+        this.touchEvent.onScale = (scale: number) => {
+            this.onScale(scale);
         };
-
-        this.touchEvent.onTap = (x: number, y: number, scale: number) => {
-            for (let obj of this.list) {
-                if (obj.contain(x, y, scale)) {
-                    obj.onTap();
-                    break;
-                }
-            }
+        this.touchEvent.onTap = (x: number, y: number) => {
+            this.onTap(x, y);
         };
     }
 
