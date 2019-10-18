@@ -1,7 +1,7 @@
 <template>
     <view class="content">
         <view>
-            <canvas canvas-id="main" style="width: 300px; height: 300px; background:#123123;"
+            <canvas canvas-id="main" style="width: 300px; height: 300px;"
                     @touchstart="onTouchStart($event,'main')"
                     @touchmove="onTouchMove($event,'main')"
                     @touchend="onTouchEnd($event,'main')"></canvas>
@@ -37,6 +37,7 @@
                 uni.$emit(EventFul.getEventName(EventType.onTouchEnd, id), event);
             },
             onTouchMove(event:any, id:string){
+                console.log(`${event.touches[0].x}, ${event.touches[0].y}`);
                 uni.$emit(EventFul.getEventName(EventType.onTouchMove, id), event);
             }
         }
@@ -63,6 +64,6 @@
     canvas {
         width: 300upx;
         height: 150upx;
-        background-color: 'green';
+        /*background-color: 'green';*/
     }
 </style>
