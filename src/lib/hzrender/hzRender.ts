@@ -69,7 +69,9 @@ export class hzRender {
     }
 
     private onTap(x: number, y: number) {
-        for (let obj of this.list) {
+
+        for (let i = this.list.length - 1; i >= 0; i--) {
+            let obj = this.list[i];
             if (obj.contain(x, y)) {
                 if (obj.onTap) {
                     obj.onTap();

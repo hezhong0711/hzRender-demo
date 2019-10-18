@@ -37,6 +37,7 @@ export let drawIndex = () => {
     points.push(new Point(120, 133));
 
     let polyline = new Polyline({
+        zIndex: 100,
         points: points,
         lineWidth: 2,
         smooth: 0,
