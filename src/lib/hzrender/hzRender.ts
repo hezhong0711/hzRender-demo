@@ -50,9 +50,9 @@ export class hzRender {
 
         this.context.draw();
 
-        setTimeout(() => {
-            this.onScale(1.5);
-        }, 1000);
+        // setTimeout(() => {
+        //     this.onScale(1.5);
+        // }, 10000);
     }
 
     destory() {
