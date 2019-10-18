@@ -1,5 +1,5 @@
 import {Displayable, DisplayableCfg} from "@/lib/hzrender/basic/Displayable";
-import {CatMullCurve, Line, Point} from "@/lib/hzrender/unit/Point";
+import {CatMullCurve, Line, LinePath, Point} from "@/lib/hzrender/unit/Point";
 
 export class Polyline extends Displayable {
     points: Array<Point> = [];
@@ -8,6 +8,9 @@ export class Polyline extends Displayable {
     lineColor?: string;
     lineGradient?: boolean;
     isDash?: boolean;
+    linePaths: Array<LinePath> = [];
+    catMullPaths: Array<CatMullCurve> = [];
+    tapOffset: number;
 
     constructor(cfg: PolylineCfg) {
         super(cfg);
@@ -17,9 +20,18 @@ export class Polyline extends Displayable {
         this.lineGradient = cfg.lineGradient ? cfg.lineGradient : false;
         this.lineColor = cfg.lineColor ? cfg.lineColor : 'black';
         this.isDash = cfg.isDash ? cfg.isDash : false;
+        this.tapOffset = cfg.tapOffset ? cfg.tapOffset : 2;
     }
 
     contain(x: number, y: number): boolean {
+        let point = new Point(x, y);
+        for (let i = 0; i < this.linePaths.length; i++) {
+            let path = this.linePaths[i];
+            let distance = Line.calcDistanceFromPointToLine(point, path.toLine());
+            if (distance < this.tapOffset) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -32,11 +44,11 @@ export class Polyline extends Displayable {
     }
 
     private drawLine(context: any) {
-        let linePaths = this.getLinePaths();
+        this.linePaths = this.getLinePaths();
 
-        for (let i = 0; i < linePaths.length; i++) {
+        for (let i = 0; i < this.linePaths.length; i++) {
             context.beginPath();
-            let path = linePaths[i];
+            let path = this.linePaths[i];
 
             if (this.isDash) {
                 context.setLineDash([4, 6]);
@@ -63,11 +75,11 @@ export class Polyline extends Displayable {
     }
 
     private drawCatMull(context: any) {
-        let catMullPaths = this.getCatMullPaths();
-        console.log(catMullPaths.length);
-        for (let i = 0; i < catMullPaths.length; i++) {
+        this.catMullPaths = this.getCatMullPaths();
+        console.log(this.catMullPaths.length);
+        for (let i = 0; i < this.catMullPaths.length; i++) {
             context.beginPath();
-            let path = catMullPaths[i];
+            let path = this.catMullPaths[i];
             context.moveTo(path.start.x, path.start.y);
             if (this.isDash) {
                 context.setLineDash([4, 6]);
@@ -148,11 +160,11 @@ export class Polyline extends Displayable {
     }
 
     private getLinePaths() {
-        let cache: Array<Line> = [];
+        let cache: Array<LinePath> = [];
 
         for (let i = 1; i < this.points.length; i++) {
             cache.push(
-                new Line(
+                new LinePath(
                     Point.scale(this.points[i - 1], this.scaleInfo.scale),
                     Point.scale(this.points[i], this.scaleInfo.scale)));
         }
@@ -167,5 +179,6 @@ interface PolylineCfg extends DisplayableCfg {
     lineColor?: string;
     lineGradient?: boolean;
     smooth?: number;
+    tapOffset?: number;
     // smoothConstraint?: Array<Coordinate>;
 }

@@ -42,7 +42,8 @@ export let drawIndex = () => {
         smooth: 0,
         // lineGradient: true,
         isDash: false,
-        lineColor: 'blue'
+        lineColor: 'blue',
+        onTap: () => console.log('click polyline')
     });
     hz.add(circle);
     hz.add(rect);
