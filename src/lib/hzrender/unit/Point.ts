@@ -13,7 +13,7 @@ export class Point extends Coordinate {
     }
 }
 
-export class LinePath {
+export class Line {
     start: Point;
     end: Point;
 
@@ -23,7 +23,7 @@ export class LinePath {
     }
 }
 
-export class CatMullPath extends LinePath {
+export class CatMullCurve extends Line {
     ctrl1: Point;
     ctrl2: Point;
 

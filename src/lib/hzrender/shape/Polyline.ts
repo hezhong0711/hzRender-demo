@@ -1,5 +1,5 @@
 import {Displayable, DisplayableCfg} from "@/lib/hzrender/basic/Displayable";
-import {CatMullPath, LinePath, Point} from "@/lib/hzrender/unit/Point";
+import {CatMullCurve, Line, Point} from "@/lib/hzrender/unit/Point";
 
 export class Polyline extends Displayable {
     points: Array<Point> = [];
@@ -89,7 +89,7 @@ export class Polyline extends Displayable {
     }
 
     private getCatMullPaths() {
-        let cache: Array<CatMullPath> = [];
+        let cache: Array<CatMullCurve> = [];
         let data = this.points;
 
         let p0, p1, p2, p3, bp1, bp2, d1, d2, d3, A, B, N, M;
@@ -142,17 +142,17 @@ export class Polyline extends Displayable {
                 bp2 = p2;
             }
 
-            cache.push(new CatMullPath(p1, bp1, bp2, p2));
+            cache.push(new CatMullCurve(p1, bp1, bp2, p2));
         }
         return cache;
     }
 
     private getLinePaths() {
-        let cache: Array<LinePath> = [];
+        let cache: Array<Line> = [];
 
         for (let i = 1; i < this.points.length; i++) {
             cache.push(
-                new LinePath(
+                new Line(
                     Point.scale(this.points[i - 1], this.scaleInfo.scale),
                     Point.scale(this.points[i], this.scaleInfo.scale)));
         }
