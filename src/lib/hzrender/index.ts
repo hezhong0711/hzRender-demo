@@ -3,6 +3,7 @@ import {Circle} from "@/lib/hzrender/shape/Circle";
 import {Rect} from "@/lib/hzrender/shape/Rect";
 import {Polyline} from "@/lib/hzrender/shape/Polyline";
 import {Point} from "@/lib/hzrender/unit/Point";
+import {ScaleType} from "@/lib/hzrender/basic/Displayable";
 
 export let drawIndex = () => {
     let hz = new hzRender({
@@ -15,6 +16,7 @@ export let drawIndex = () => {
     let circle = new Circle({
         cx: 10,
         cy: 10,
+        scaleType: ScaleType.SHAPE,
         onTap: () => {
             console.log('click circle');
         }
@@ -26,6 +28,7 @@ export let drawIndex = () => {
         width: 100,
         height: 40,
         color: '#343434',
+        scaleType: ScaleType.SHAPE,
         onTap: () => console.log('click rect')
     });
 
@@ -40,16 +43,18 @@ export let drawIndex = () => {
         zIndex: 100,
         points: points,
         lineWidth: 2,
-        smooth: 0,
+        smooth: 1,
         // lineGradient: true,
         isDash: false,
         lineColor: 'blue',
         onTap: () => console.log('click polyline')
     });
+
     hz.add(circle);
     hz.add(rect);
     hz.add(polyline);
     hz.render();
+
     console.log({
         hzRender: hz
     });

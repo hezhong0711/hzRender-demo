@@ -1,33 +1,48 @@
-import {Displayable, DisplayableCfg} from "@/lib/hzrender/basic/Displayable";
-import Geometry, {Coordinate} from "@/lib/hzrender/tool/geometry";
+import {Displayable, DisplayableCfg, ScaleType} from "@/lib/hzrender/basic/Displayable";
+import Geometry from "@/lib/hzrender/tool/geometry";
+import {Point} from "@/lib/hzrender/unit/Point";
 
 export class Circle extends Displayable {
-    c: Coordinate;
+    c: Point;
     r: number;
     color: string;
 
     constructor(cfg: CircleCfg) {
         super(cfg);
-        this.c = new Coordinate(cfg.cx, cfg.cy);
+        this.c = new Point(cfg.cx, cfg.cy);
         this.r = cfg.r == null ? 10 : cfg.r;
         this.color = cfg.color == null ? 'blue' : cfg.color;
     }
 
     draw(context: CanvasContext): void {
+        let scaleC = this.getScaleCenterPoint();
+        let scaleR = this.getScaleRadius();
+        console.log(`${scaleR}=${this.r}*${this.scaleInfo.scale}`);
         context.beginPath();
-        context.arc(this.c.x * this.scaleInfo.scale,
-            this.c.y * this.scaleInfo.scale,
-            this.r * this.scaleInfo.scale
-            , 0, 2 * Math.PI);
+        context.arc(scaleC.x, scaleC.y, scaleR, 0, 2 * Math.PI);
         context.setFillStyle(this.color);
         context.fill();
     }
 
     contain(x: number, y: number): boolean {
-        let p1 = new Coordinate(x, y);
-        let p2 = new Coordinate(this.c.x * this.scaleInfo.scale, this.c.y * this.scaleInfo.scale);
+        let p1 = new Point(x, y);
+        let p2 = Point.scale(this.c, this.scaleInfo.scale);
         let distance = Geometry.calcDistance(p1, p2);
         return distance <= this.r * this.scaleInfo.scale;
+    }
+
+    private getScaleCenterPoint() {
+        if (this.scaleType == ScaleType.NONE) {
+            return this.c;
+        }
+        return Point.scale(this.c, this.scaleInfo.scale);
+    }
+
+    private getScaleRadius() {
+        if (this.scaleType == ScaleType.SHAPE) {
+            return this.r * this.scaleInfo.scale;
+        }
+        return this.r;
     }
 }
 

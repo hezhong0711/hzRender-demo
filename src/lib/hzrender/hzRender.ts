@@ -3,8 +3,8 @@ import {TouchEvent, TouchEventCfg} from "@/lib/hzrender/basic/TouchEvent";
 
 export class hzRender {
     id: string;
-    width?: number;
-    height?: number;
+    width: number;
+    height: number;
     backgroundScalbale?: boolean;
     touchEventCfg?: TouchEventCfg;
 
@@ -20,8 +20,8 @@ export class hzRender {
         this.id = cfg.id;
         this.context = uni.createCanvasContext(this.id);
 
-        this.width = cfg.width ? 0 : cfg.width;
-        this.height = cfg.height ? 0 : cfg.height;
+        this.width = cfg.width ? cfg.width : 0;
+        this.height = cfg.height ? cfg.height : 0;
         this.backgroundScalbale = cfg.backgroundScalable ? false : cfg.backgroundScalable;
         this.touchEventCfg = cfg.touchEventCfg;
 
@@ -39,8 +39,8 @@ export class hzRender {
     }
 
     clear() {
-        this.context.clearRect(0, 0, this.width, this.height);
-        this.context.draw()
+        this.context.clearRect(20, 20, 40, 40);
+        this.context.draw(true);
     }
 
     render() {
@@ -50,9 +50,11 @@ export class hzRender {
 
         this.context.draw();
 
-        setTimeout(() => {
-            this.onScale(1.5);
-        }, 2000);
+        // setTimeout(() => {
+        //     this.onScale(1.5);
+        //     // this.clear();
+        //     // this.context.draw();
+        // }, 2000);
     }
 
     destory() {
@@ -60,11 +62,11 @@ export class hzRender {
     }
 
     private onScale(scale: number) {
-        this.context.scale(scale, scale);
+        // this.clear();
+        // this.context.scale(scale, scale);
         for (let obj of this.list) {
             obj.scale(scale);
         }
-        this.clear();
         this.render();
     }
 

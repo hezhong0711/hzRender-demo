@@ -2,6 +2,7 @@ import EventFul, {EventType} from "@/lib/hzrender/basic/EventFul";
 import AnyTouch from "any-touch";
 
 export class TouchEvent {
+    FRAME_RATE: number = 50;
     anyTouch = new AnyTouch();
     private scale: number = 1;
     private lastTimeStamp: number = 0;
@@ -54,7 +55,7 @@ export class TouchEvent {
 
     private requestAnimationFrame = (currentTimeStemp: number, callback: () => void) => {
         let deltaTimeStamp = currentTimeStemp - this.lastTimeStamp;
-        if (deltaTimeStamp > 50) {
+        if (deltaTimeStamp > this.FRAME_RATE) {
             this.lastTimeStamp = currentTimeStemp;
             callback();
         }

@@ -1,15 +1,15 @@
-import {Displayable, DisplayableCfg} from "@/lib/hzrender/basic/Displayable";
-import {Coordinate} from "@/lib/hzrender/tool/geometry";
+import {Displayable, DisplayableCfg, ScaleType} from "@/lib/hzrender/basic/Displayable";
+import {Point} from "@/lib/hzrender/unit/Point";
 
 export class Rect extends Displayable {
-    p: Coordinate;
+    p: Point;
     width: number;
     height: number;
     color: string;
 
     constructor(cfg: RectCfg) {
         super(cfg);
-        this.p = new Coordinate(cfg.px, cfg.py);
+        this.p = new Point(cfg.px, cfg.py);
         this.width = cfg.width;
         this.height = cfg.height;
         this.color = cfg.color == null ? 'blue' : cfg.color;
@@ -25,13 +25,32 @@ export class Rect extends Displayable {
     }
 
     draw(context: any): void {
+        let point = this.getScalePoint();
+        let wh = this.getScaleWidthAndHeight();
         context.beginPath();
-        context.rect(this.p.x * this.scaleInfo.scale,
-            this.p.y * this.scaleInfo.scale,
-            this.width * this.scaleInfo.scale,
-            this.height * this.scaleInfo.scale);
+        context.rect(point.x, point.y, wh.width, wh.height);
         context.setFillStyle(this.color);
         context.fill();
+    }
+
+    private getScalePoint() {
+        if (this.scaleType == ScaleType.NONE) {
+            return this.p;
+        }
+        return Point.scale(this.p, this.scaleInfo.scale);
+    }
+
+    private getScaleWidthAndHeight() {
+        if (this.scaleType == ScaleType.SHAPE) {
+            return {
+                width: this.width * this.scaleInfo.scale,
+                height: this.height * this.scaleInfo.scale
+            };
+        }
+        return {
+            width: this.width,
+            height: this.height
+        };
     }
 
 }
