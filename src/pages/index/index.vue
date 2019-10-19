@@ -37,7 +37,6 @@
                 uni.$emit(EventFul.getEventName(EventType.onTouchEnd, id), event);
             },
             onTouchMove(event:any, id:string){
-                console.log(`${event.touches[0].x}, ${event.touches[0].y}`);
                 uni.$emit(EventFul.getEventName(EventType.onTouchMove, id), event);
             }
         }

@@ -33,6 +33,10 @@ export class Rect extends Displayable {
         context.fill();
     }
 
+    pan(deltaX: number, deltaY: number): void {
+        this.p.move(deltaX, deltaY);
+    }
+
     private getScalePoint() {
         if (this.scaleType == ScaleType.NONE) {
             return this.p;

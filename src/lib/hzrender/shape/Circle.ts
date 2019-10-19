@@ -14,6 +14,7 @@ export class Circle extends Displayable {
         this.color = cfg.color == null ? 'blue' : cfg.color;
     }
 
+
     draw(context: CanvasContext): void {
         let scaleC = this.getScaleCenterPoint();
         let scaleR = this.getScaleRadius();
@@ -29,6 +30,10 @@ export class Circle extends Displayable {
         let p2 = Point.scale(this.c, this.scaleInfo.scale);
         let distance = Geometry.calcDistance(p1, p2);
         return distance <= this.r * this.scaleInfo.scale;
+    }
+
+    pan(deltaX: number, deltaY: number): void {
+        this.c.move(deltaX, deltaY);
     }
 
     private getScaleCenterPoint() {

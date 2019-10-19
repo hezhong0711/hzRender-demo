@@ -11,6 +11,11 @@ export class Point extends Coordinate {
     static scale(point: Point, scale: number) {
         return new Point(point.x * scale, point.y * scale, point.color);
     }
+
+    move(distanceX: number, distanceY: number) {
+        this.x = this.x + distanceX;
+        this.y = this.y + distanceY;
+    }
 }
 
 export class LinePath {

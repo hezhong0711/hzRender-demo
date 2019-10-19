@@ -43,6 +43,12 @@ export class Polyline extends Displayable {
         }
     }
 
+    pan(deltaX: number, deltaY: number): void {
+        this.points.forEach(point => {
+            point.move(deltaX, deltaY);
+        });
+    }
+
     private drawLine(context: any) {
         this.linePaths = this.getLinePaths();
 

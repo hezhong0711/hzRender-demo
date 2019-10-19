@@ -83,6 +83,13 @@ export class hzRender {
         }
     }
 
+    private onPan(x: number, y: number) {
+        this.list.forEach(obj => {
+            obj.pan(x, y);
+        });
+        this.render();
+    }
+
     private registerEvent() {
         this.touchEvent = new TouchEvent(this.id);
         this.touchEvent.onScale = (scale: number) => {
@@ -90,6 +97,9 @@ export class hzRender {
         };
         this.touchEvent.onTap = (x: number, y: number) => {
             this.onTap(x, y);
+        };
+        this.touchEvent.onPan = (x: number, y: number) => {
+            this.onPan(x, y);
         };
     }
 

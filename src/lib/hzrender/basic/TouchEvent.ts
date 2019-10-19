@@ -8,6 +8,10 @@ export class TouchEvent {
     private lastTimeStamp: number = 0;
     onScale: Function | undefined;
     onTap: Function | undefined;
+    onPan: Function | undefined;
+    deltaPanX: number = 0;
+    deltaPanY: number = 0;
+
 
     constructor(private id: string) {
         uni.$on(EventFul.getEventName(EventType.onTouchStart, this.id), (event) => {
@@ -39,6 +43,19 @@ export class TouchEvent {
                 }
             });
         });
+
+        this.anyTouch.on('pan', ev => {
+            this.deltaPanX += ev.deltaX;
+            this.deltaPanY += ev.deltaY;
+            this.requestAnimationFrame(ev.timestamp, () => {
+                if (this.onPan) {
+                    this.onPan(this.deltaPanX, this.deltaPanY);
+                }
+                this.deltaPanX = 0;
+                this.deltaPanY = 0;
+            });
+        });
+
     }
 
     // 将 touchEvent 装换成 anyTouch 可以使用的类型
