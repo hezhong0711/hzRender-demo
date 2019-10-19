@@ -21,8 +21,9 @@ export class TouchEvent {
         });
 
         this.anyTouch.on('pinch', ev => {
+            console.log(`${this.scale * ev.deltaScale}=${this.scale}*${ev.deltaScale}`);
+
             this.scale = this.scale * ev.deltaScale;
-            console.log(this.scale);
 
             this.requestAnimationFrame(ev.timestamp, () => {
                 if (this.onScale) {

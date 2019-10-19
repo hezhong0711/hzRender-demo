@@ -17,7 +17,7 @@ export class Circle extends Displayable {
     draw(context: CanvasContext): void {
         let scaleC = this.getScaleCenterPoint();
         let scaleR = this.getScaleRadius();
-        console.log(`${scaleR}=${this.r}*${this.scaleInfo.scale}`);
+        // console.log(`${scaleR}=${this.r}*${this.scaleInfo.scale}`);
         context.beginPath();
         context.arc(scaleC.x, scaleC.y, scaleR, 0, 2 * Math.PI);
         context.setFillStyle(this.color);

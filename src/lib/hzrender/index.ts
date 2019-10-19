@@ -33,7 +33,7 @@ export let drawIndex = () => {
     });
 
     let points: Array<Point> = [];
-    points.push(new Point(5, 13, 'red'));
+    points.push(new Point(10, 10, 'red'));
     points.push(new Point(105, 133, '#330033'));
     points.push(new Point(105, 13, '#234234'));
     // points.push(new Point(5, 23, '#229922'));
@@ -47,6 +47,7 @@ export let drawIndex = () => {
         // lineGradient: true,
         isDash: false,
         lineColor: 'blue',
+        scaleType: ScaleType.SHAPE,
         onTap: () => console.log('click polyline')
     });
 
