@@ -1,6 +1,5 @@
 import EventFul, {EventType} from "@/lib/hzrender/basic/EventFul";
 import AnyTouch from "any-touch";
-import {Coordinate} from "@/lib/hzrender/tool/geometry";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 import {Point} from "@/lib/hzrender/unit/Point";
 
@@ -8,15 +7,14 @@ export class TouchEvent {
     FRAME_RATE: number = 50;
     anyTouch = new AnyTouch();
     private scaleInfo: ScaleInfo = new ScaleInfo();
-    // private scale: number = 1;
-    // private scalePoint: Coordinate = new Coordinate(0, 0);
-    // private scalePrevPoint: Coordinate = new Coordinate(0, 0);
     private lastTimeStamp: number = 0;
     onScale: Function | undefined;
     onTap: Function | undefined;
     onPan: Function | undefined;
     deltaPanX: number = 0;
     deltaPanY: number = 0;
+    gesturePanStatus: GestureStatus = GestureStatus.NONE;
+    gesturePinchStatus: GestureStatus = GestureStatus.NONE;
 
 
     constructor(private id: string) {
@@ -31,38 +29,38 @@ export class TouchEvent {
         });
 
         this.anyTouch.on('pinch', ev => {
-            console.log('pinch');
-            // console.log(`${this.scale * ev.deltaScale}=${this.scale}*${ev.deltaScale}`);
-            // console.log(ev.x, ev.y);
-            // if (ev.deltaScale == 1) {
-            //     console.log({
-            //         scalePoint: this.scalePoint,
-            //         center: ev.center
-            //     });
-            //     this.scalePoint = new Coordinate(0, 0);
-            // } else
-            if (ev.center) {
-                this.scaleInfo.point = new Point(ev.center.x, ev.center.y);
-                this.scaleInfo.scale = this.scaleInfo.scale * ev.deltaScale;
-                this.requestAnimationFrame(ev.timestamp, () => {
-                    if (this.onScale) {
-                        this.onScale(this.scaleInfo);
-                    }
-                });
-                this.scaleInfo.prevPoint = this.scaleInfo.point;
+            if (this.gesturePinchStatus == GestureStatus.START) {
+                this.gesturePinchStatus = GestureStatus.ON;
+            }
+            if (this.gesturePinchStatus == GestureStatus.ON) {
+                console.log('pinch');
+                if (ev.center) {
+                    this.scaleInfo.point = new Point(ev.center.x, ev.center.y);
+                    this.scaleInfo.scale = this.scaleInfo.scale * ev.deltaScale;
+                    this.requestAnimationFrame(ev.timestamp, () => {
+                        if (this.onScale) {
+                            this.onScale(this.scaleInfo);
+                        }
+                    });
+                    this.scaleInfo.prevPoint = this.scaleInfo.point;
+                }
             }
         });
 
-        // this.anyTouch.on('pinchstart', ev => {
-        //     console.log('pinchstart');
-        //     if (ev.center) {
-        //         this.scalePoint = new Coordinate(ev.center.x, ev.center.y);
-        //     }
-        // });
-        // this.anyTouch.on('pinchend', ev => {
-        //     console.log('pinchend');
-        //     this.scalePrevPoint = this.scalePoint;
-        // });
+        this.anyTouch.on('pinchstart', ev => {
+            if (this.gesturePinchStatus == GestureStatus.NONE) {
+                this.gesturePinchStatus = GestureStatus.START;
+                console.log('pinchstart');
+            }
+        });
+
+        this.anyTouch.on('pinchend', ev => {
+            if (this.gesturePinchStatus == GestureStatus.ON
+                || this.gesturePinchStatus == GestureStatus.START) {
+                console.log('pinchend');
+                this.gesturePinchStatus = GestureStatus.NONE;
+            }
+        });
 
         this.anyTouch.on('tap', ev => {
             console.log('tap');
@@ -73,17 +71,35 @@ export class TouchEvent {
             });
         });
 
+        this.anyTouch.on('panstart', ev => {
+            if (this.gesturePanStatus == GestureStatus.NONE) {
+                this.gesturePanStatus = GestureStatus.START;
+                console.log('panstart');
+            }
+        });
+        this.anyTouch.on('panend', ev => {
+            if (this.gesturePanStatus == GestureStatus.ON
+                || this.gesturePanStatus == GestureStatus.START) {
+                console.log('panend');
+                this.gesturePanStatus = GestureStatus.NONE;
+            }
+        });
         this.anyTouch.on('pan', ev => {
-            console.log('pan');
-            this.deltaPanX += ev.deltaX;
-            this.deltaPanY += ev.deltaY;
-            this.requestAnimationFrame(ev.timestamp, () => {
-                if (this.onPan) {
-                    this.onPan(this.deltaPanX, this.deltaPanY);
-                }
-                this.deltaPanX = 0;
-                this.deltaPanY = 0;
-            });
+            if (this.gesturePanStatus == GestureStatus.START) {
+                this.gesturePanStatus = GestureStatus.ON;
+            }
+            if (this.gesturePanStatus == GestureStatus.ON) {
+                console.log('pan');
+                this.deltaPanX += ev.deltaX;
+                this.deltaPanY += ev.deltaY;
+                this.requestAnimationFrame(ev.timestamp, () => {
+                    if (this.onPan) {
+                        this.onPan(this.deltaPanX, this.deltaPanY);
+                    }
+                    this.deltaPanX = 0;
+                    this.deltaPanY = 0;
+                });
+            }
         });
 
     }
@@ -113,4 +129,10 @@ export class TouchEvent {
 
 export interface TouchEventCfg {
     scalable?: boolean;
+}
+
+enum GestureStatus {
+    NONE,
+    START,
+    ON,
 }
