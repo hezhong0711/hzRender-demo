@@ -1,4 +1,5 @@
 import Geometry, {Coordinate} from "@/lib/hzrender/tool/geometry";
+import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
 export class Point extends Coordinate {
     color: string;
@@ -8,8 +9,15 @@ export class Point extends Coordinate {
         this.color = color ? color : 'black';
     }
 
-    static scale(point: Point, scale: number) {
-        return new Point(point.x * scale, point.y * scale, point.color);
+    static scale(point: Point, scaleInfo: ScaleInfo) {
+        let p = new Point(point.x - scaleInfo.point.x, point.y - scaleInfo.point.y);
+        let distanceScaleX = scaleInfo.point.x - scaleInfo.prevPoint.x;
+        let distanceScaleY = scaleInfo.point.y - scaleInfo.prevPoint.y;
+
+        console.log({distanceScaleX, distanceScaleY, p, scaleInfo});
+        // console.log(`${point.x} + ${scaleInfo.scale} * ${directionX}: ${scaleInfo.point.x}`);
+        return new Point(scaleInfo.point.x + p.x * scaleInfo.scale,
+            scaleInfo.point.y + p.y * scaleInfo.scale, point.color);
     }
 
     move(distanceX: number, distanceY: number) {

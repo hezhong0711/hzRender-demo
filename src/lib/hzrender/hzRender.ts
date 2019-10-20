@@ -1,5 +1,7 @@
 import {Displayable} from "@/lib/hzrender/basic/Displayable";
 import {TouchEvent, TouchEventCfg} from "@/lib/hzrender/basic/TouchEvent";
+import {Point} from "@/lib/hzrender/unit/Point";
+import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
 export class hzRender {
     id: string;
@@ -49,9 +51,11 @@ export class hzRender {
         });
 
         this.context.draw();
+        //
 
         // setTimeout(() => {
-        //     this.onScale(1.5);
+        //     this.onScale(1.5, new Point(100, 100));
+        //     this.onScale(2, new Point(200, 100));
         //     // this.clear();
         //     // this.context.draw();
         // }, 2000);
@@ -61,11 +65,11 @@ export class hzRender {
 
     }
 
-    private onScale(scale: number) {
+    private onScale(scaleInfo:ScaleInfo) {
         // this.clear();
         // this.context.scale(scale, scale);
         for (let obj of this.list) {
-            obj.scale(scale);
+            obj.scale(scaleInfo);
         }
         this.render();
     }
@@ -92,8 +96,8 @@ export class hzRender {
 
     private registerEvent() {
         this.touchEvent = new TouchEvent(this.id);
-        this.touchEvent.onScale = (scale: number) => {
-            this.onScale(scale);
+        this.touchEvent.onScale = (scaleInfo:ScaleInfo) => {
+            this.onScale(scaleInfo);
         };
         this.touchEvent.onTap = (x: number, y: number) => {
             this.onTap(x, y);

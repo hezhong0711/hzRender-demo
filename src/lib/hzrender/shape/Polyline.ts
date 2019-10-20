@@ -82,7 +82,7 @@ export class Polyline extends Displayable {
 
     private drawCatMull(context: any) {
         this.catMullPaths = this.getCatMullPaths();
-        console.log(this.catMullPaths.length);
+        console.log(this.catMullPaths);
         for (let i = 0; i < this.catMullPaths.length; i++) {
             context.beginPath();
             let path = this.catMullPaths[i];
@@ -115,11 +115,11 @@ export class Polyline extends Displayable {
         let length = data.length;
         for (let i = 0; i < length - 1; i++) {
 
-            p0 = i == 0 ? Point.scale(data[0], this.scaleInfo.scale)
-                : Point.scale(data[i - 1], this.scaleInfo.scale);
-            p1 = Point.scale(data[i], this.scaleInfo.scale);
-            p2 = Point.scale(data[i + 1], this.scaleInfo.scale)
-            p3 = i + 2 < length ? Point.scale(data[i + 2], this.scaleInfo.scale) : p2;
+            p0 = i == 0 ? Point.scale(data[0], this.scaleInfo)
+                : Point.scale(data[i - 1], this.scaleInfo);
+            p1 = Point.scale(data[i], this.scaleInfo);
+            p2 = Point.scale(data[i + 1], this.scaleInfo);
+            p3 = i + 2 < length ? Point.scale(data[i + 2], this.scaleInfo) : p2;
 
             d1 = Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
             d2 = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
@@ -180,7 +180,7 @@ export class Polyline extends Displayable {
         if (this.scaleType == ScaleType.NONE) {
             return point;
         }
-        return Point.scale(point, this.scaleInfo.scale);
+        return Point.scale(point, this.scaleInfo);
     }
 }
 

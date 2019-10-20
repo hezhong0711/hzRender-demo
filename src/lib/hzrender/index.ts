@@ -14,8 +14,8 @@ export let drawIndex = () => {
     });
 
     let circle = new Circle({
-        cx: 10,
-        cy: 10,
+        cx: 110,
+        cy: 110,
         scaleType: ScaleType.SHAPE,
         onTap: () => {
             console.log('click circle');
@@ -52,8 +52,8 @@ export let drawIndex = () => {
     });
 
     hz.add(circle);
-    hz.add(rect);
-    hz.add(polyline);
+    // hz.add(rect);
+    // hz.add(polyline);
     hz.render();
 
     console.log({

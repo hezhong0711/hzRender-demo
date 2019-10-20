@@ -1,6 +1,6 @@
 import EventFul from "@/lib/hzrender/basic/EventFul";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
-import {Coordinate} from "@/lib/hzrender/tool/geometry";
+import {Point} from "@/lib/hzrender/unit/Point";
 
 export abstract class Displayable extends EventFul {
     zIndex: number;
@@ -14,14 +14,11 @@ export abstract class Displayable extends EventFul {
 
     abstract contain(x: number, y: number): boolean;
 
-    scale(scale: number, point?: Coordinate) {
+    scale( scaleInfo:ScaleInfo) {
         if (this.scaleType == ScaleType.NONE) {
             return;
         }
-        this.scaleInfo.scale = scale;
-        if (point) {
-            this.scaleInfo.coordiate = point;
-        }
+        this.scaleInfo = scaleInfo;
     }
 
     abstract pan(deltaX: number, deltaY: number): void;

@@ -41,7 +41,7 @@ export class Rect extends Displayable {
         if (this.scaleType == ScaleType.NONE) {
             return this.p;
         }
-        return Point.scale(this.p, this.scaleInfo.scale);
+        return Point.scale(this.p, this.scaleInfo);
     }
 
     private getScaleWidthAndHeight() {
