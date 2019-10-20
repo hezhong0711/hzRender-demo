@@ -52,8 +52,8 @@ export let drawIndex = () => {
     });
 
     hz.add(circle);
-    // hz.add(rect);
-    // hz.add(polyline);
+    hz.add(rect);
+    hz.add(polyline);
     hz.render();
 
     console.log({

@@ -10,15 +10,23 @@ export class Point extends Coordinate {
     }
 
     static scale(point: Point, scaleInfo: ScaleInfo) {
-        let p = new Point(point.x - scaleInfo.point.x, point.y - scaleInfo.point.y);
-        let distanceScaleX = scaleInfo.point.x - scaleInfo.prevPoint.x;
-        let distanceScaleY = scaleInfo.point.y - scaleInfo.prevPoint.y;
-
-        console.log({distanceScaleX, distanceScaleY, p, scaleInfo});
-        // console.log(`${point.x} + ${scaleInfo.scale} * ${directionX}: ${scaleInfo.point.x}`);
-        return new Point(scaleInfo.point.x + p.x * scaleInfo.scale,
-            scaleInfo.point.y + p.y * scaleInfo.scale, point.color);
+        // console.log(scaleInfo.matrix);
+        let x = scaleInfo.matrix[0] * point.x + scaleInfo.matrix[2] * point.y + scaleInfo.matrix[4];
+        let y = scaleInfo.matrix[1] * point.x + scaleInfo.matrix[3] * point.y + scaleInfo.matrix[5];
+        return new Point(x, y, point.color);
     }
+
+    //
+    // static scale(point: Point, scaleInfo: ScaleInfo) {
+    //     let p = new Point(point.x - scaleInfo.point.x, point.y - scaleInfo.point.y);
+    //     let distanceScaleX = scaleInfo.point.x - scaleInfo.prevPoint.x;
+    //     let distanceScaleY = scaleInfo.point.y - scaleInfo.prevPoint.y;
+    //
+    //     console.log({distanceScaleX, distanceScaleY, p, scaleInfo});
+    //     // console.log(`${point.x} + ${scaleInfo.scale} * ${directionX}: ${scaleInfo.point.x}`);
+    //     return new Point(scaleInfo.point.x + p.x * scaleInfo.scale,
+    //         scaleInfo.point.y + p.y * scaleInfo.scale, point.color);
+    // }
 
     move(distanceX: number, distanceY: number) {
         this.x = this.x + distanceX;

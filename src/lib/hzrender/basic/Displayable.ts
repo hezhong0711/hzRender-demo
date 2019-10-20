@@ -1,6 +1,5 @@
 import EventFul from "@/lib/hzrender/basic/EventFul";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
-import {Point} from "@/lib/hzrender/unit/Point";
 
 export abstract class Displayable extends EventFul {
     zIndex: number;

@@ -82,7 +82,7 @@ export class Polyline extends Displayable {
 
     private drawCatMull(context: any) {
         this.catMullPaths = this.getCatMullPaths();
-        console.log(this.catMullPaths);
+        // console.log(this.catMullPaths);
         for (let i = 0; i < this.catMullPaths.length; i++) {
             context.beginPath();
             let path = this.catMullPaths[i];

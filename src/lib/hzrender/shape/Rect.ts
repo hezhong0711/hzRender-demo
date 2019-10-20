@@ -16,11 +16,12 @@ export class Rect extends Displayable {
     }
 
     contain(x: number, y: number): boolean {
-        let deltaX = x - this.p.x * this.scaleInfo.scale;
-        let deltaY = y - this.p.y * this.scaleInfo.scale;
+        let point = this.getScalePoint();
+        let deltaX = x - point.x;
+        let deltaY = y - point.y;
 
-        return deltaX >= 0 && deltaX <= this.width * this.scaleInfo.scale
-            && deltaY >= 0 && deltaY <= this.height * this.scaleInfo.scale;
+        return deltaX >= 0 && deltaX <= this.width * this.scaleInfo.lastScale
+            && deltaY >= 0 && deltaY <= this.height * this.scaleInfo.lastScale;
 
     }
 
@@ -47,8 +48,8 @@ export class Rect extends Displayable {
     private getScaleWidthAndHeight() {
         if (this.scaleType == ScaleType.SHAPE) {
             return {
-                width: this.width * this.scaleInfo.scale,
-                height: this.height * this.scaleInfo.scale
+                width: this.width * this.scaleInfo.lastScale,
+                height: this.height * this.scaleInfo.lastScale
             };
         }
         return {

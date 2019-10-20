@@ -17,7 +17,7 @@ export class Circle extends Displayable {
 
     draw(context: CanvasContext): void {
         let scaleC = this.getScaleCenterPoint();
-        console.log(scaleC);
+        // console.log(scaleC);
         let scaleR = this.getScaleRadius();
         // console.log(`${scaleR}=${this.r}*${this.scaleInfo.scale}`);
         context.beginPath();
@@ -30,7 +30,7 @@ export class Circle extends Displayable {
         let p1 = new Point(x, y);
         let p2 = this.getScaleCenterPoint();
         let distance = Geometry.calcDistance(p1, p2);
-        return distance <= this.r * this.scaleInfo.scale;
+        return distance <= this.r * this.scaleInfo.lastScale;
     }
 
     pan(deltaX: number, deltaY: number): void {
@@ -46,7 +46,7 @@ export class Circle extends Displayable {
 
     private getScaleRadius() {
         if (this.scaleType == ScaleType.SHAPE) {
-            return this.r * this.scaleInfo.scale;
+            return this.r * this.scaleInfo.lastScale;
         }
         return this.r;
     }
