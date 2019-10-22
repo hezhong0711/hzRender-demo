@@ -65,7 +65,7 @@ export class hzRender {
 
     }
 
-    private onScale(scaleInfo:ScaleInfo) {
+    private onScale(scaleInfo: ScaleInfo) {
         // this.clear();
         // this.context.scale(scale, scale);
         for (let obj of this.list) {
@@ -87,23 +87,23 @@ export class hzRender {
         }
     }
 
-    private onPan(x: number, y: number) {
+    private onPan(scaleInfo: ScaleInfo) {
         this.list.forEach(obj => {
-            obj.pan(x, y);
+            obj.pan(scaleInfo);
         });
         this.render();
     }
 
     private registerEvent() {
         this.touchEvent = new TouchEvent(this.id);
-        this.touchEvent.onScale = (scaleInfo:ScaleInfo) => {
+        this.touchEvent.onScale = (scaleInfo: ScaleInfo) => {
             this.onScale(scaleInfo);
         };
         this.touchEvent.onTap = (x: number, y: number) => {
             this.onTap(x, y);
         };
-        this.touchEvent.onPan = (x: number, y: number) => {
-            this.onPan(x, y);
+        this.touchEvent.onPan = (scaleInfo: ScaleInfo) => {
+            this.onPan(scaleInfo);
         };
     }
 

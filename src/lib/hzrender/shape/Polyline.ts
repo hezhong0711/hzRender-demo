@@ -1,5 +1,6 @@
 import {Displayable, DisplayableCfg, ScaleType} from "@/lib/hzrender/basic/Displayable";
 import {CatMullCurve, Line, LinePath, Point} from "@/lib/hzrender/unit/Point";
+import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
 export class Polyline extends Displayable {
     points: Array<Point> = [];
@@ -43,9 +44,9 @@ export class Polyline extends Displayable {
         }
     }
 
-    pan(deltaX: number, deltaY: number): void {
+    pan(scaleInfo: ScaleInfo): void {
         this.points.forEach(point => {
-            point.move(deltaX, deltaY);
+            point.move(scaleInfo.panOffset.x, scaleInfo.panOffset.y);
         });
     }
 

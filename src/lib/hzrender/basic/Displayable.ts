@@ -20,7 +20,7 @@ export abstract class Displayable extends EventFul {
         this.scaleInfo = scaleInfo;
     }
 
-    abstract pan(deltaX: number, deltaY: number): void;
+    abstract pan(scaleInfo: ScaleInfo): void;
 
     protected constructor(cfg: DisplayableCfg) {
         super();

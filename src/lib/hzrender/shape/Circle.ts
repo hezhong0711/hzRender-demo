@@ -34,8 +34,8 @@ export class Circle extends Displayable {
         return distance <= this.r * this.scaleInfo.lastScale;
     }
 
-    pan(deltaX: number, deltaY: number): void {
-        this.c.move(deltaX, deltaY);
+    pan(scaleInfo: ScaleInfo): void {
+        this.c.move(scaleInfo.panOffset.x, scaleInfo.panOffset.y);
     }
 
     private getScaleCenterPoint() {

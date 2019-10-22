@@ -95,14 +95,16 @@ export class TouchEvent {
             }
             if (this.gesturePanStatus == GestureStatus.ON) {
                 console.log('pan');
-                this.deltaPanX += ev.deltaX;
-                this.deltaPanY += ev.deltaY;
+                this.scaleInfo.panOffset.x += ev.deltaX;
+                this.scaleInfo.panOffset.y += ev.deltaY;
                 this.requestAnimationFrame(ev.timestamp, () => {
                     if (this.onPan) {
-                        this.onPan(this.deltaPanX, this.deltaPanY);
+                        this.scaleInfo.panOffset.x = this.scaleInfo.panOffset.x / this.scaleInfo.scale;
+                        this.scaleInfo.panOffset.y = this.scaleInfo.panOffset.y / this.scaleInfo.scale;
+                        this.onPan(this.scaleInfo);
                     }
-                    this.deltaPanX = 0;
-                    this.deltaPanY = 0;
+                    this.scaleInfo.panOffset.x = 0;
+                    this.scaleInfo.panOffset.y = 0;
                 });
             }
         });

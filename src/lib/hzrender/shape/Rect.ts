@@ -1,5 +1,6 @@
 import {Displayable, DisplayableCfg, ScaleType} from "@/lib/hzrender/basic/Displayable";
 import {Point} from "@/lib/hzrender/unit/Point";
+import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
 export class Rect extends Displayable {
     p: Point;
@@ -34,8 +35,8 @@ export class Rect extends Displayable {
         context.fill();
     }
 
-    pan(deltaX: number, deltaY: number): void {
-        this.p.move(deltaX, deltaY);
+    pan(scaleInfo: ScaleInfo): void {
+        this.p.move(scaleInfo.panOffset.x, scaleInfo.panOffset.y);
     }
 
     private getScalePoint() {
