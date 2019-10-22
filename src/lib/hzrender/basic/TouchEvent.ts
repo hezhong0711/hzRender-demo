@@ -33,26 +33,21 @@ export class TouchEvent {
                 this.gesturePinchStatus = GestureStatus.ON;
             }
             if (this.gesturePinchStatus == GestureStatus.ON) {
-                // console.log('pinch');
+                console.log('pinch');
                 if (ev.center) {
-                    let a = ev.deltaScale * this.scaleInfo.lastScale;
-                    let d = a;
-                    let e = (1 - ev.deltaScale) * (ev.center.x - (this.scaleInfo.lastPoint.x + this.scaleInfo.lastTranslate.x) + this.scaleInfo.lastTranslate.x);
-                    let f = (1 - ev.deltaScale) * (ev.center.y - (this.scaleInfo.lastPoint.y + this.scaleInfo.lastTranslate.y) + this.scaleInfo.lastTranslate.y);
-
-                    this.scaleInfo.matrix = [a, 0, 0, d, e, f];
-                    // this.scaleInfo.point = new Point(ev.center.x, ev.center.y);
-                    // this.scaleInfo.scale = this.scaleInfo.scale * ev.deltaScale;
+                    this.scaleInfo.deltaScale = ev.deltaScale;
+                    this.scaleInfo.point = new Point(ev.center.x, ev.center.y);
+                    this.scaleInfo.scale = this.scaleInfo.scale * this.scaleInfo.deltaScale;
+                    this.scaleInfo.lastOffset = new Point(
+                        this.scaleInfo.lastOffset.x * this.scaleInfo.deltaScale + (1 - this.scaleInfo.deltaScale) * this.scaleInfo.point.x,
+                        this.scaleInfo.lastOffset.y * this.scaleInfo.deltaScale + (1 - this.scaleInfo.deltaScale) * this.scaleInfo.point.y
+                    );
+                    console.log(this.scaleInfo.scale);
                     this.requestAnimationFrame(ev.timestamp, () => {
                         if (this.onScale) {
                             this.onScale(this.scaleInfo);
-
-                            this.scaleInfo.lastTranslate.x = e;
-                            this.scaleInfo.lastTranslate.y = f;
-                            this.scaleInfo.lastScale = a;
                         }
                     });
-                    // this.scaleInfo.prevPoint = this.scaleInfo.point;
                 }
             }
         });
@@ -61,12 +56,6 @@ export class TouchEvent {
             if (this.gesturePinchStatus == GestureStatus.NONE) {
                 this.gesturePinchStatus = GestureStatus.START;
                 console.log('pinchstart');
-                this.scaleInfo.lastTranslate = new Point(this.scaleInfo.matrix[4], this.scaleInfo.matrix[5]);
-                this.scaleInfo.posCenter = new Point(ev.x, ev.y);
-                this.scaleInfo.lastCenter = new Point(this.scaleInfo.center.x + this.scaleInfo.lastTranslate.x,
-                    this.scaleInfo.center.y + this.scaleInfo.lastTranslate.y);
-                this.scaleInfo.posCenter = new Point(ev.x - this.scaleInfo.lastCenter.x,
-                    ev.y - this.scaleInfo.lastCenter.y);
             }
         });
 
@@ -82,7 +71,7 @@ export class TouchEvent {
             console.log('tap');
             this.requestAnimationFrame(ev.timestamp, () => {
                 if (this.onTap) {
-                    this.onTap(ev.x, ev.y);
+                    this.onTap(ev.x, ev.y, this.scaleInfo.scale);
                 }
             });
         });
@@ -91,7 +80,6 @@ export class TouchEvent {
             if (this.gesturePanStatus == GestureStatus.NONE) {
                 this.gesturePanStatus = GestureStatus.START;
                 console.log('panstart');
-                this.scaleInfo.lastTranslate = new Point(this.scaleInfo.matrix[4], this.scaleInfo.matrix[5]);
             }
         });
         this.anyTouch.on('panend', ev => {
@@ -99,8 +87,6 @@ export class TouchEvent {
                 || this.gesturePanStatus == GestureStatus.START) {
                 console.log('panend');
                 this.gesturePanStatus = GestureStatus.NONE;
-                this.scaleInfo.matrix[4] = 0;
-                this.scaleInfo.matrix[5] = 0;
             }
         });
         this.anyTouch.on('pan', ev => {
@@ -108,15 +94,12 @@ export class TouchEvent {
                 this.gesturePanStatus = GestureStatus.ON;
             }
             if (this.gesturePanStatus == GestureStatus.ON) {
-                // console.log('pan');
-
+                console.log('pan');
                 this.deltaPanX += ev.deltaX;
                 this.deltaPanY += ev.deltaY;
                 this.requestAnimationFrame(ev.timestamp, () => {
-                    this.scaleInfo.matrix[4] = this.scaleInfo.lastTranslate.x + this.deltaPanX;
-                    this.scaleInfo.matrix[5] = this.scaleInfo.lastTranslate.y + this.deltaPanY;
                     if (this.onPan) {
-                        this.onPan(this.scaleInfo.matrix[4], this.scaleInfo.matrix[5]);
+                        this.onPan(this.deltaPanX, this.deltaPanY);
                     }
                     this.deltaPanX = 0;
                     this.deltaPanY = 0;

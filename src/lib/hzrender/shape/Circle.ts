@@ -1,6 +1,7 @@
 import {Displayable, DisplayableCfg, ScaleType} from "@/lib/hzrender/basic/Displayable";
 import Geometry from "@/lib/hzrender/tool/geometry";
 import {Point} from "@/lib/hzrender/unit/Point";
+import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
 export class Circle extends Displayable {
     c: Point;

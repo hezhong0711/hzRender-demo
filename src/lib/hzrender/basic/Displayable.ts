@@ -13,7 +13,7 @@ export abstract class Displayable extends EventFul {
 
     abstract contain(x: number, y: number): boolean;
 
-    scale( scaleInfo:ScaleInfo) {
+    scale(scaleInfo: ScaleInfo) {
         if (this.scaleType == ScaleType.NONE) {
             return;
         }

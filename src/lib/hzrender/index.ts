@@ -4,6 +4,7 @@ import {Rect} from "@/lib/hzrender/shape/Rect";
 import {Polyline} from "@/lib/hzrender/shape/Polyline";
 import {Point} from "@/lib/hzrender/unit/Point";
 import {ScaleType} from "@/lib/hzrender/basic/Displayable";
+import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
 export let drawIndex = () => {
     let hz = new hzRender({
@@ -56,7 +57,49 @@ export let drawIndex = () => {
     hz.add(polyline);
     hz.render();
 
-    console.log({
-        hzRender: hz
-    });
+    // console.log({
+    //     hzRender: hz
+    // });
+    // let scaleInfo = new ScaleInfo();
+    //
+    // let p = new Point(2, 2);
+    // for (let i = 0; i < 5; i++) {
+    //     change(i, scaleInfo);
+    //     scaleInfo.scale = scaleInfo.scale * scaleInfo.deltaScale;
+    //     scaleInfo.lastOffset = new Point(
+    //         scaleInfo.lastOffset.x * scaleInfo.deltaScale + (1 - scaleInfo.deltaScale) * scaleInfo.point.x,
+    //         scaleInfo.lastOffset.y * scaleInfo.deltaScale + (1 - scaleInfo.deltaScale) * scaleInfo.point.y
+    //     );
+    //     console.log(scale(p, scaleInfo));
+    // }
 };
+
+let scale = (point: Point, scaleInfo: ScaleInfo) => {
+    let x = scaleInfo.scale * point.x + scaleInfo.lastOffset.x;
+    let y = scaleInfo.scale * point.y + scaleInfo.lastOffset.y;
+    return new Point(x, y);
+};
+
+let change = (id: number, scaleInfo: ScaleInfo) => {
+    switch (id) {
+        case 0:
+            scaleInfo = new ScaleInfo();
+            break;
+        case 1:
+            scaleInfo.deltaScale = 1.5;
+            scaleInfo.point = new Point(5, 5);
+            break;
+        case 2:
+            scaleInfo.deltaScale = 1;
+            scaleInfo.point = new Point(8, 8);
+            break;
+        case 3:
+            scaleInfo.deltaScale = 1.01;
+            scaleInfo.point = new Point(8, 8);
+            break;
+        case 4:
+            scaleInfo.deltaScale = 1;
+            scaleInfo.point = new Point(8, 8);
+            break;
+    }
+}
