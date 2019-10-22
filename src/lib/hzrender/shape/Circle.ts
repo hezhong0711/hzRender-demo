@@ -31,7 +31,7 @@ export class Circle extends Displayable {
         let p1 = new Point(x, y);
         let p2 = this.getScaleCenterPoint();
         let distance = Geometry.calcDistance(p1, p2);
-        return distance <= this.r * this.scaleInfo.lastScale;
+        return distance <= this.getScaleRadius();
     }
 
     pan(scaleInfo: ScaleInfo): void {
@@ -47,7 +47,7 @@ export class Circle extends Displayable {
 
     private getScaleRadius() {
         if (this.scaleType == ScaleType.SHAPE) {
-            return this.r * this.scaleInfo.lastScale;
+            return this.r * this.scaleInfo.scale;
         }
         return this.r;
     }

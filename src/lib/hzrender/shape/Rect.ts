@@ -18,11 +18,12 @@ export class Rect extends Displayable {
 
     contain(x: number, y: number): boolean {
         let point = this.getScalePoint();
+        let wh = this.getScaleWidthAndHeight();
         let deltaX = x - point.x;
         let deltaY = y - point.y;
 
-        return deltaX >= 0 && deltaX <= this.width * this.scaleInfo.lastScale
-            && deltaY >= 0 && deltaY <= this.height * this.scaleInfo.lastScale;
+        return deltaX >= 0 && deltaX <= wh.width
+            && deltaY >= 0 && deltaY <= wh.height;
 
     }
 
@@ -49,8 +50,8 @@ export class Rect extends Displayable {
     private getScaleWidthAndHeight() {
         if (this.scaleType == ScaleType.SHAPE) {
             return {
-                width: this.width * this.scaleInfo.lastScale,
-                height: this.height * this.scaleInfo.lastScale
+                width: this.width * this.scaleInfo.scale,
+                height: this.height * this.scaleInfo.scale
             };
         }
         return {

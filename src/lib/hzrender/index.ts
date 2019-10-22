@@ -15,9 +15,9 @@ export let drawIndex = () => {
     });
 
     let circle = new Circle({
-        cx: 110,
-        cy: 110,
-        scaleType: ScaleType.SHAPE,
+        cx: 10,
+        cy: 10,
+        scaleType: ScaleType.POSITION,
         onTap: () => {
             console.log('click circle');
         }
@@ -29,7 +29,7 @@ export let drawIndex = () => {
         width: 100,
         height: 40,
         color: '#343434',
-        scaleType: ScaleType.SHAPE,
+        scaleType: ScaleType.POSITION,
         onTap: () => console.log('click rect')
     });
 
@@ -48,7 +48,7 @@ export let drawIndex = () => {
         // lineGradient: true,
         isDash: false,
         lineColor: 'blue',
-        scaleType: ScaleType.SHAPE,
+        scaleType: ScaleType.POSITION,
         onTap: () => console.log('click polyline')
     });
 

@@ -33,7 +33,7 @@ export class TouchEvent {
                 this.gesturePinchStatus = GestureStatus.ON;
             }
             if (this.gesturePinchStatus == GestureStatus.ON) {
-                console.log('pinch');
+                // console.log('pinch');
                 if (ev.center) {
                     this.scaleInfo.deltaScale = ev.deltaScale;
                     this.scaleInfo.point = new Point(ev.center.x, ev.center.y);
@@ -42,7 +42,6 @@ export class TouchEvent {
                         this.scaleInfo.lastOffset.x * this.scaleInfo.deltaScale + (1 - this.scaleInfo.deltaScale) * this.scaleInfo.point.x,
                         this.scaleInfo.lastOffset.y * this.scaleInfo.deltaScale + (1 - this.scaleInfo.deltaScale) * this.scaleInfo.point.y
                     );
-                    console.log(this.scaleInfo.scale);
                     this.requestAnimationFrame(ev.timestamp, () => {
                         if (this.onScale) {
                             this.onScale(this.scaleInfo);
@@ -94,7 +93,7 @@ export class TouchEvent {
                 this.gesturePanStatus = GestureStatus.ON;
             }
             if (this.gesturePanStatus == GestureStatus.ON) {
-                console.log('pan');
+                // console.log('pan');
                 this.scaleInfo.panOffset.x += ev.deltaX;
                 this.scaleInfo.panOffset.y += ev.deltaY;
                 this.requestAnimationFrame(ev.timestamp, () => {
