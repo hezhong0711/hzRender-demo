@@ -1,4 +1,4 @@
-import {Displayable, DisplayableCfg, ScaleType} from "@/lib/hzrender/basic/Displayable";
+import {Displayable, DisplayableCfg} from "@/lib/hzrender/basic/Displayable";
 import {Point} from "@/lib/hzrender/unit/Point";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
@@ -17,7 +17,7 @@ export class Rect extends Displayable {
     }
 
     contain(x: number, y: number): boolean {
-        let point = this.getScalePoint();
+        let point = this.getScalePoint(this.p);
         let wh = this.getScaleWidthAndHeight();
         let deltaX = x - point.x;
         let deltaY = y - point.y;
@@ -28,7 +28,7 @@ export class Rect extends Displayable {
     }
 
     draw(context: any): void {
-        let point = this.getScalePoint();
+        let point = this.getScalePoint(this.p);
         let wh = this.getScaleWidthAndHeight();
         context.beginPath();
         context.rect(point.x, point.y, wh.width, wh.height);
@@ -40,26 +40,12 @@ export class Rect extends Displayable {
         this.p.move(scaleInfo.panOffset.x, scaleInfo.panOffset.y);
     }
 
-    private getScalePoint() {
-        if (this.scaleType == ScaleType.NONE) {
-            return this.p;
-        }
-        return Point.scale(this.p, this.scaleInfo);
-    }
-
     private getScaleWidthAndHeight() {
-        if (this.scaleType == ScaleType.SHAPE) {
-            return {
-                width: this.width * this.scaleInfo.scale,
-                height: this.height * this.scaleInfo.scale
-            };
-        }
         return {
-            width: this.width,
-            height: this.height
-        };
+            width: this.getScaleLength(this.width),
+            height: this.getScaleLength(this.height)
+        }
     }
-
 }
 
 interface RectCfg extends DisplayableCfg {

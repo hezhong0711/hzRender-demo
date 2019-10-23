@@ -1,5 +1,6 @@
 import EventFul from "@/lib/hzrender/basic/EventFul";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
+import {Point} from "@/lib/hzrender/unit/Point";
 
 export abstract class Displayable extends EventFul {
     zIndex: number;
@@ -21,6 +22,20 @@ export abstract class Displayable extends EventFul {
     }
 
     abstract pan(scaleInfo: ScaleInfo): void;
+
+    getScaleLength(length: number) {
+        if (this.scaleType == ScaleType.SHAPE) {
+            return length * this.scaleInfo.scale;
+        }
+        return length;
+    }
+
+    getScalePoint(point: Point) {
+        if (this.scaleType == ScaleType.NONE) {
+            return point;
+        }
+        return Point.scale(point, this.scaleInfo);
+    }
 
     protected constructor(cfg: DisplayableCfg) {
         super();

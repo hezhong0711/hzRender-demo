@@ -1,5 +1,5 @@
-import {Displayable, DisplayableCfg, ScaleType} from "@/lib/hzrender/basic/Displayable";
-import Geometry from "@/lib/hzrender/tool/geometry";
+import {Displayable, DisplayableCfg} from "@/lib/hzrender/basic/Displayable";
+import Geometry from "@/lib/hzrender/tool/Geometry";
 import {Point} from "@/lib/hzrender/unit/Point";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
@@ -15,12 +15,9 @@ export class Circle extends Displayable {
         this.color = cfg.color == null ? 'blue' : cfg.color;
     }
 
-
     draw(context: CanvasContext): void {
-        let scaleC = this.getScaleCenterPoint();
-        // console.log(scaleC);
-        let scaleR = this.getScaleRadius();
-        // console.log(`${scaleR}=${this.r}*${this.scaleInfo.scale}`);
+        let scaleC = this.getScalePoint(this.c);
+        let scaleR = this.getScaleLength(this.r);
         context.beginPath();
         context.arc(scaleC.x, scaleC.y, scaleR, 0, 2 * Math.PI);
         context.setFillStyle(this.color);
@@ -29,27 +26,13 @@ export class Circle extends Displayable {
 
     contain(x: number, y: number): boolean {
         let p1 = new Point(x, y);
-        let p2 = this.getScaleCenterPoint();
+        let p2 = this.getScalePoint(this.c);
         let distance = Geometry.calcDistance(p1, p2);
-        return distance <= this.getScaleRadius();
+        return distance <= this.getScaleLength(this.r);
     }
 
     pan(scaleInfo: ScaleInfo): void {
         this.c.move(scaleInfo.panOffset.x, scaleInfo.panOffset.y);
-    }
-
-    private getScaleCenterPoint() {
-        if (this.scaleType == ScaleType.NONE) {
-            return this.c;
-        }
-        return Point.scale(this.c, this.scaleInfo);
-    }
-
-    private getScaleRadius() {
-        if (this.scaleType == ScaleType.SHAPE) {
-            return this.r * this.scaleInfo.scale;
-        }
-        return this.r;
     }
 }
 

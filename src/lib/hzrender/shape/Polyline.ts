@@ -1,4 +1,4 @@
-import {Displayable, DisplayableCfg, ScaleType} from "@/lib/hzrender/basic/Displayable";
+import {Displayable, DisplayableCfg} from "@/lib/hzrender/basic/Displayable";
 import {CatMullCurve, Line, LinePath, Point} from "@/lib/hzrender/unit/Point";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
@@ -175,13 +175,6 @@ export class Polyline extends Displayable {
             );
         }
         return cache;
-    }
-
-    private getScalePoint(point: Point) {
-        if (this.scaleType == ScaleType.NONE) {
-            return point;
-        }
-        return Point.scale(point, this.scaleInfo);
     }
 }
 
