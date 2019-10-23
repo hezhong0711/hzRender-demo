@@ -1,13 +1,10 @@
-import {Displayable} from "@/lib/hzrender/basic/Displayable";
+import {Displayable, VisualSize} from "@/lib/hzrender/basic/Displayable";
 import {TouchEvent, TouchEventCfg} from "@/lib/hzrender/basic/TouchEvent";
-import {Point} from "@/lib/hzrender/unit/Point";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
 export class hzRender {
     id: string;
-    width: number;
-    height: number;
-    backgroundScalbale?: boolean;
+    visualSize: VisualSize = new VisualSize();
     touchEventCfg?: TouchEventCfg;
 
     touchEvent: TouchEvent | undefined = undefined;
@@ -21,10 +18,8 @@ export class hzRender {
 
         this.id = cfg.id;
         this.context = uni.createCanvasContext(this.id);
-
-        this.width = cfg.width ? cfg.width : 0;
-        this.height = cfg.height ? cfg.height : 0;
-        this.backgroundScalbale = cfg.backgroundScalable ? false : cfg.backgroundScalable;
+        this.visualSize.height = cfg.height;
+        this.visualSize.width = cfg.width;
         this.touchEventCfg = cfg.touchEventCfg;
 
         if (this.touchEventCfg) {
@@ -33,8 +28,8 @@ export class hzRender {
     }
 
     add(shape: Displayable) {
+        shape.visualSize = this.visualSize;
         this.list.push(shape);
-
         this.list.sort((a, b) => {
             return a.zIndex - b.zIndex;
         });
@@ -111,10 +106,9 @@ export class hzRender {
 
 interface hzRenderCfg {
     id: string;
-    width?: number;
-    height?: number;
-    // 背景进行缩放，图形不缩放
-    backgroundScalable?: boolean;
+    // 可以看见的区域大小
+    width: number;
+    height: number;
     touchEventCfg?: TouchEventCfg;
 }
 

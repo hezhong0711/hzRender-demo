@@ -9,10 +9,13 @@ export abstract class Displayable extends EventFul {
     onPan?: (x: number, y: number) => void;
     scaleInfo: ScaleInfo = new ScaleInfo();
     scaleType: ScaleType;
+    visualSize: VisualSize = new VisualSize();
 
     abstract draw(context: any, scaleInfo?: ScaleInfo): void;
 
     abstract contain(x: number, y: number): boolean;
+
+    abstract inVisualArea(params?: any): boolean;
 
     scale(scaleInfo: ScaleInfo) {
         if (this.scaleType == ScaleType.NONE) {
@@ -53,6 +56,11 @@ export interface DisplayableCfg {
     onPan?: (x: number, y: number) => void;
     onScale?: () => void;
     scaleType?: ScaleType;// 缩放类型
+}
+
+export class VisualSize {
+    width: number = 0;
+    height: number = 0;
 }
 
 export enum ScaleType {

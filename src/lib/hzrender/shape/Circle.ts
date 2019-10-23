@@ -16,6 +16,10 @@ export class Circle extends Displayable {
     }
 
     draw(context: CanvasContext): void {
+        if (!this.inVisualArea()) {
+            return;
+        }
+
         let scaleC = this.getScalePoint(this.c);
         let scaleR = this.getScaleLength(this.r);
         context.beginPath();
@@ -29,6 +33,15 @@ export class Circle extends Displayable {
         let p2 = this.getScalePoint(this.c);
         let distance = Geometry.calcDistance(p1, p2);
         return distance <= this.getScaleLength(this.r);
+    }
+
+    inVisualArea(): boolean {
+        let scaleC = this.getScalePoint(this.c);
+        let scaleR = this.getScaleLength(this.r);
+        return (scaleC.x <= this.visualSize.width + scaleR
+            && scaleC.x >= 0 - scaleR
+            && scaleC.y <= this.visualSize.height + scaleR
+            && scaleC.y >= 0 - scaleR);
     }
 
     pan(scaleInfo: ScaleInfo): void {

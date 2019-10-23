@@ -24,10 +24,22 @@ export class Rect extends Displayable {
 
         return deltaX >= 0 && deltaX <= wh.width
             && deltaY >= 0 && deltaY <= wh.height;
+    }
 
+    inVisualArea(): boolean {
+        let p = this.getScalePoint(this.p);
+        let wh = this.getScaleWidthAndHeight();
+
+        return p.x >= 0 - wh.width
+            && p.x <= wh.width + this.visualSize.width
+            && p.y >= 0 - wh.height
+            && p.y <= wh.width + this.visualSize.height;
     }
 
     draw(context: any): void {
+        if (!this.inVisualArea()) {
+            return;
+        }
         let point = this.getScalePoint(this.p);
         let wh = this.getScaleWidthAndHeight();
         context.beginPath();

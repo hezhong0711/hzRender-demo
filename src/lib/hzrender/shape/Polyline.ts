@@ -36,6 +36,14 @@ export class Polyline extends Displayable {
         return false;
     }
 
+    inVisualArea(linePath: LinePath): boolean {
+        let ps = this.getScalePoint(linePath.start);
+        let pe = this.getScalePoint(linePath.end);
+
+        return this.isPointInVisualArea(ps)
+            || this.isPointInVisualArea(pe);
+    }
+
     draw(context: any): void {
         if (this.smooth === 0) {
             this.drawLine(context);
@@ -50,13 +58,23 @@ export class Polyline extends Displayable {
         });
     }
 
+    private isPointInVisualArea(point: Point) {
+        return point.x <= this.visualSize.width
+            && point.x >= 0
+            && point.y <= this.visualSize.height
+            && point.y >= 0;
+    }
+
     private drawLine(context: any) {
         this.linePaths = this.getLinePaths();
 
         for (let i = 0; i < this.linePaths.length; i++) {
-            context.beginPath();
             let path = this.linePaths[i];
+            if (!this.inVisualArea(path)) {
+                continue;
+            }
 
+            context.beginPath();
             if (this.isDash) {
                 context.setLineDash([4, 6]);
             } else {
@@ -85,8 +103,11 @@ export class Polyline extends Displayable {
         this.catMullPaths = this.getCatMullPaths();
         // console.log(this.catMullPaths);
         for (let i = 0; i < this.catMullPaths.length; i++) {
-            context.beginPath();
             let path = this.catMullPaths[i];
+            if (!this.inVisualArea(path)) {
+                continue;
+            }
+            context.beginPath();
             context.moveTo(path.start.x, path.start.y);
             if (this.isDash) {
                 context.setLineDash([4, 6]);
@@ -176,6 +197,7 @@ export class Polyline extends Displayable {
         }
         return cache;
     }
+
 }
 
 interface PolylineCfg extends DisplayableCfg {

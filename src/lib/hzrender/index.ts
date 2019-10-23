@@ -10,7 +10,7 @@ export let drawIndex = () => {
     let hz = new hzRender({
         id: 'main',
         width: 300,
-        height: 150,
+        height: 300,
         touchEventCfg: {}
     });
 
