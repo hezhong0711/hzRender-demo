@@ -1,4 +1,4 @@
-import Geometry, {Coordinate} from "@/lib/hzrender/tool/Geometry";
+import {Coordinate} from "@/lib/hzrender/tool/Geometry";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
 export class Point extends Coordinate {
@@ -18,6 +18,10 @@ export class Point extends Coordinate {
     move(distanceX: number, distanceY: number) {
         this.x = this.x + distanceX;
         this.y = this.y + distanceY;
+    }
+
+    calcDistance(p: Coordinate) {
+        return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
     }
 }
 
@@ -193,10 +197,6 @@ export class Line {
         return (p2.y - p1.y) / (p2.x - p1.x);
     }
 
-    calcDistance(p1: Coordinate, p2: Coordinate) {
-        return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-    }
-
     // 计算点到线的距离
     calcDistanceFromPointToLine(point) {
         // 计算垂足
@@ -205,11 +205,11 @@ export class Line {
         let distance = 10000;
         if (this.isPointInLineLimit(footPoint)) {
             // 计算两点的距离
-            distance = this.calcDistance(point, footPoint);
+            distance = point.calcDistance(footPoint);
         } else {
             // 计算起点或者终点的距离
-            let d1 = this.calcDistance(point, this.start as Point);
-            let d2 = this.calcDistance(point, this.end as Point);
+            let d1 = point.calcDistance(this.start as Point);
+            let d2 = point.calcDistance(this.end as Point);
             distance = d1 > d2 ? d2 : d1;
         }
 

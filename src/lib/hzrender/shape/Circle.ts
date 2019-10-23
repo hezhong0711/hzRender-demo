@@ -1,5 +1,4 @@
 import {Displayable, DisplayableCfg} from "@/lib/hzrender/basic/Displayable";
-import Geometry from "@/lib/hzrender/tool/Geometry";
 import {Point} from "@/lib/hzrender/unit/Point";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
@@ -31,7 +30,7 @@ export class Circle extends Displayable {
     contain(x: number, y: number): boolean {
         let p1 = new Point(x, y);
         let p2 = this.getScalePoint(this.c);
-        let distance = Geometry.calcDistance(p1, p2);
+        let distance = p1.calcDistance(p2);
         return distance <= this.getScaleLength(this.r);
     }
 
