@@ -11,8 +11,6 @@ export class TouchEvent {
     onScale: Function | undefined;
     onTap: Function | undefined;
     onPan: Function | undefined;
-    deltaPanX: number = 0;
-    deltaPanY: number = 0;
     gesturePanStatus: GestureStatus = GestureStatus.NONE;
     gesturePinchStatus: GestureStatus = GestureStatus.NONE;
 
@@ -68,6 +66,7 @@ export class TouchEvent {
 
         this.anyTouch.on('tap', ev => {
             console.log('tap');
+            console.log(ev.x, ev.y);
             this.requestAnimationFrame(ev.timestamp, () => {
                 if (this.onTap) {
                     this.onTap(ev.x, ev.y, this.scaleInfo.scale);

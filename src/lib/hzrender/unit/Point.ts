@@ -1,4 +1,4 @@
-import Geometry, {Coordinate} from "@/lib/hzrender/tool/geometry";
+import Geometry, {Coordinate} from "@/lib/hzrender/tool/Geometry";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
 
 export class Point extends Coordinate {
@@ -54,10 +54,10 @@ export class Line {
     end?: Point;
     point: Point;
     k: number | null;
-    b?: number;
+    b: number = 0;
     isKNull: boolean;
 
-    constructor(k: number | null, b: number | undefined, point: Point) {
+    constructor(k: number | null, b: number, point: Point) {
         this.k = k;
         this.b = b;
         this.isKNull = this.k == null;
@@ -76,7 +76,7 @@ export class Line {
 
     getX(y) {
         if (this.isKNull || this.k == null || this.b == undefined) {
-            return null;
+            return this.point.x;
         }
 
         return (y - this.b) / this.k;
@@ -84,15 +84,15 @@ export class Line {
 
     getY(x) {
         if (this.isKNull || this.k == null || this.b == undefined) {
-            return this.point.y;
+            return null;
         }
 
         return this.k * x + this.b;
     }
 
     // 判断点和线的距离是否小于一个偏移量
-    isPointInLine(point, offset) {
-        let distance = Geometry.calcDistanceFromPointToLine(point, this);
+    isPointInLine(point, offset: number = 0.1) {
+        let distance = this.calcDistanceFromPointToLine(point);
         return distance <= offset;
     }
 
@@ -112,6 +112,48 @@ export class Line {
         return result;
     }
 
+    // 判断是否和线平行
+    isParallelToLine(line: Line) {
+        return (this.isKNull && line.isKNull)
+            || this.k == line.k;
+    }
+
+    // 计算两条线的交点
+    getCrossPointToLine(line: Line, inLimit: boolean = true) {
+        // 平行没有交点
+        if (this.isParallelToLine(line)) {
+            return null;
+        }
+        let point: Point | null = null;
+
+        if (this.k == null && line.k != null) {
+            let x = this.point.x;
+            let y = line.k * x + line.b;
+            point = new Point(x, y);
+        } else if (this.k != null && line.k == null) {
+            let x = line.point.x;
+            let y = this.k * x + this.b;
+            point = new Point(x, y);
+        } else if (this.k != null && line.k != null) {
+            let x = (this.b - line.b) / (line.k - this.k);
+            let y = line.k * x + line.b;
+            point = new Point(x, y);
+        }
+
+        if (point == null) {
+            return null;
+        }
+
+        if (inLimit) {
+            if (this.isPointInLine(point) && line.isPointInLine(point)) {
+                return point;
+            } else {
+                return null;
+            }
+        }
+        return point;
+    }
+
     static getLineLimit(start: Point, end: Point) {
         let line = this.getLine(start, end);
         line.setLineStart(start);
@@ -121,15 +163,22 @@ export class Line {
 
     static getLine(p1: Point, p2: Point) {
         let k = Line.calcK(p1, p2);
-        let b: number | undefined = undefined;
+        let b: number = 0;
         if (k != null) {
             b = p1.y - k * p1.x;
         }
         return new Line(k, b, p1);
     }
 
+    static getLineByStartAndEnd(pStart: Point, pEnd: Point) {
+        let line = this.getLine(pStart, pEnd);
+        line.setLineStart(pStart);
+        line.setLineEnd(pEnd);
+        return line;
+    }
+
     static getLineByK(p: Point, k: number) {
-        let b: number | undefined = undefined;
+        let b: number = 0;
         if (k != null) {
             b = p.y - k * p.x;
         }
@@ -144,23 +193,23 @@ export class Line {
         return (p2.y - p1.y) / (p2.x - p1.x);
     }
 
-    static calcDistance(p1: Coordinate, p2: Coordinate) {
+    calcDistance(p1: Coordinate, p2: Coordinate) {
         return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
     }
 
     // 计算点到线的距离
-    static calcDistanceFromPointToLine(point, line) {
+    calcDistanceFromPointToLine(point) {
         // 计算垂足
-        let footPoint = this.calcFootPoint(line, point);
+        let footPoint = this.calcFootPoint(point);
         // 如果 垂足在线段上
         let distance = 10000;
-        if (line.isPointInLineLimit(footPoint)) {
+        if (this.isPointInLineLimit(footPoint)) {
             // 计算两点的距离
             distance = this.calcDistance(point, footPoint);
         } else {
             // 计算起点或者终点的距离
-            let d1 = this.calcDistance(point, line.start);
-            let d2 = this.calcDistance(point, line.end);
+            let d1 = this.calcDistance(point, this.start as Point);
+            let d2 = this.calcDistance(point, this.end as Point);
             distance = d1 > d2 ? d2 : d1;
         }
 
@@ -169,17 +218,25 @@ export class Line {
 
 
     // 计算点到条线的垂足
-    static calcFootPoint(line, point) {
-        if (line.isKNull || line.k === 0) {
+    calcFootPoint(point) {
+        if (this.k == null) {
             return new Point(
-                line.point.x,
+                this.point.x,
                 point.y
             );
         }
-        let kv = -1 / line.k;
+
+        if (this.k == 0) {
+            return new Point(
+                point.x,
+                this.b
+            );
+        }
+
+        let kv = -1 / this.k;
         let bv = point.y - kv * point.x;
-        let x = (line.b - bv) / (kv - line.k);
-        let y = line.k * x + line.b;
+        let x = (this.b - bv) / (kv - this.k);
+        let y = this.k * x + this.b;
 
         return new Point(
             x,

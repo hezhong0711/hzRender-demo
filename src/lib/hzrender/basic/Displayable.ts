@@ -1,6 +1,6 @@
 import EventFul from "@/lib/hzrender/basic/EventFul";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
-import {Point} from "@/lib/hzrender/unit/Point";
+import {Line, Point} from "@/lib/hzrender/unit/Point";
 
 export abstract class Displayable extends EventFul {
     zIndex: number;
@@ -61,6 +61,23 @@ export interface DisplayableCfg {
 export class VisualSize {
     width: number = 0;
     height: number = 0;
+
+    topLine() {
+        return Line.getLineByStartAndEnd(new Point(0, 0), new Point(this.width, 0));
+    }
+
+    bottomLine() {
+        return Line.getLineByStartAndEnd(new Point(0, this.height), new Point(this.width, this.width));
+    }
+
+    leftLine() {
+        return Line.getLineByStartAndEnd(new Point(0, 0), new Point(0, this.width));
+    }
+
+    rightLine() {
+        return Line.getLineByStartAndEnd(new Point(this.width, 0), new Point(this.width, this.width));
+    }
+
 }
 
 export enum ScaleType {

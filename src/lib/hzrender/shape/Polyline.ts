@@ -28,7 +28,7 @@ export class Polyline extends Displayable {
         let point = new Point(x, y);
         for (let i = 0; i < this.linePaths.length; i++) {
             let path = this.linePaths[i];
-            let distance = Line.calcDistanceFromPointToLine(point, path.toLine());
+            let distance = path.toLine().calcDistanceFromPointToLine(point);
             if (distance < this.tapOffset) {
                 return true;
             }
@@ -37,11 +37,18 @@ export class Polyline extends Displayable {
     }
 
     inVisualArea(linePath: LinePath): boolean {
-        let ps = this.getScalePoint(linePath.start);
-        let pe = this.getScalePoint(linePath.end);
+        if (linePath instanceof CatMullCurve) {
 
-        return this.isPointInVisualArea(ps)
-            || this.isPointInVisualArea(pe);
+            return !(!this.isPointInVisualArea(linePath.start)
+                && !this.isPointInVisualArea(linePath.end)
+                && !this.isPointInVisualArea(linePath.ctrl1)
+                && !this.isPointInVisualArea(linePath.ctrl2)
+                && !this.isLineInVisualArea(linePath.toLine()));
+        }
+
+        return !this.isPointInVisualArea(linePath.start)
+            && !this.isPointInVisualArea(linePath.end)
+            && !this.isLineInVisualArea(linePath.toLine());
     }
 
     draw(context: any): void {
@@ -58,7 +65,14 @@ export class Polyline extends Displayable {
         });
     }
 
-    private isPointInVisualArea(point: Point) {
+    private isLineInVisualArea(line: Line): boolean {
+        return !(line.getCrossPointToLine(this.visualSize.topLine()) == null
+            && line.getCrossPointToLine(this.visualSize.bottomLine()) == null
+            && line.getCrossPointToLine(this.visualSize.leftLine()) == null
+            && line.getCrossPointToLine(this.visualSize.rightLine()) == null);
+    }
+
+    private isPointInVisualArea(point: Point): boolean {
         return point.x <= this.visualSize.width
             && point.x >= 0
             && point.y <= this.visualSize.height
@@ -105,6 +119,7 @@ export class Polyline extends Displayable {
         for (let i = 0; i < this.catMullPaths.length; i++) {
             let path = this.catMullPaths[i];
             if (!this.inVisualArea(path)) {
+                console.log('cat mull curve is out of visual area');
                 continue;
             }
             context.beginPath();
