@@ -5,6 +5,8 @@ import {Polyline} from "@/lib/hzrender/shape/Polyline";
 import {Point} from "@/lib/hzrender/unit/Point";
 import {ScaleType} from "@/lib/hzrender/basic/Displayable";
 import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
+import tracks from "../../data/tracks.json";
+import {Track} from "@/lib/hzrender/chart/Track";
 
 export let drawIndex = () => {
     let hz = new hzRender({
@@ -52,10 +54,18 @@ export let drawIndex = () => {
         onTap: () => console.log('click polyline')
     });
 
-    hz.add(circle);
-    hz.add(rect);
-    hz.add(polyline);
-    hz.render();
+    // hz.add(circle);
+    // hz.add(rect);
+    // hz.add(polyline);
+    // hz.render();
+
+    let trackChart = new Track({
+        hz,
+        data: tracks.tracks,
+        width: 300,
+        height: 100
+    });
+    trackChart.render();
 
     // console.log({
     //     hzRender: hz

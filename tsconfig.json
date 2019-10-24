@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "resolveJsonModule": true,
     "target": "esnext",
     "module": "esnext",
     "strict": true,
@@ -11,6 +12,7 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "noImplicitAny": false,
+    "strictNullChecks": false,
     "baseUrl": ".",
     "types": [
       "webpack-env",
