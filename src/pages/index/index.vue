@@ -1,7 +1,7 @@
 <template>
     <view class="content">
         <view>
-            <canvas canvas-id="main" style="width: 300px; height: 300px;"
+            <canvas canvas-id="main" style="width: 400px; height: 600px;"
                     @touchstart="onTouchStart($event,'main')"
                     @touchmove="onTouchMove($event,'main')"
                     @touchend="onTouchEnd($event,'main')"></canvas>

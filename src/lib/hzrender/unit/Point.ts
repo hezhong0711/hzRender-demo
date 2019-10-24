@@ -218,7 +218,7 @@ export class Line {
 
 
     // 计算点到条线的垂足
-    calcFootPoint(point) {
+    calcFootPoint(point: Point) {
         if (this.k == null) {
             return new Point(
                 this.point.x,

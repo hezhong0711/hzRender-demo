@@ -11,8 +11,8 @@ import {Track} from "@/lib/hzrender/chart/Track";
 export let drawIndex = () => {
     let hz = new hzRender({
         id: 'main',
-        width: 300,
-        height: 300,
+        width: 400,
+        height: 600,
         touchEventCfg: {}
     });
 
@@ -62,8 +62,8 @@ export let drawIndex = () => {
     let trackChart = new Track({
         hz,
         data: tracks.tracks,
-        width: 300,
-        height: 100
+        width: 400,
+        height: 600
     });
     trackChart.render();
 
