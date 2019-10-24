@@ -9,6 +9,9 @@ export class Polyline extends Displayable {
     lineColor?: string;
     lineGradient?: boolean;
     isDash?: boolean;
+    isHighlight: boolean = false;
+    highlightStyle?: PolylineStyle;
+    clickable: boolean;
     linePaths: Array<LinePath> = [];
     catMullPaths: Array<CatMullCurve> = [];
     tapOffset: number;
@@ -22,6 +25,8 @@ export class Polyline extends Displayable {
         this.lineColor = cfg.lineColor ? cfg.lineColor : 'black';
         this.isDash = cfg.isDash ? cfg.isDash : false;
         this.tapOffset = cfg.tapOffset ? cfg.tapOffset : 2;
+        this.highlightStyle = cfg.highlightStyle ? cfg.highlightStyle : new PolylineStyle();
+        this.clickable = cfg.clickable ? cfg.clickable : false;
     }
 
     contain(x: number, y: number): boolean {
@@ -63,6 +68,18 @@ export class Polyline extends Displayable {
         this.points.forEach(point => {
             point.move(scaleInfo.panOffset.x, scaleInfo.panOffset.y);
         });
+    }
+
+    tap() {
+        if (this.clickable) {
+            super.tap();
+            this.isHighlight = true;
+        }
+    }
+
+    unTap() {
+        super.unTap();
+        this.isHighlight = false;
     }
 
     private isLineInVisualArea(line: Line): boolean {
@@ -224,5 +241,12 @@ export interface PolylineCfg extends DisplayableCfg {
     lineGradient?: boolean;
     smooth?: number;
     tapOffset?: number;
-    // smoothConstraint?: Array<Coordinate>;
+    highlightStyle?: PolylineStyle;
+    clickable?: boolean;
+}
+
+export class PolylineStyle {
+    color: string = 'black';
+    lineWidth: number = 3;
+    lineGradient: boolean = false;
 }

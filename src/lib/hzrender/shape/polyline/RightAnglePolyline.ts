@@ -13,22 +13,44 @@ export class RightAnglePolyline extends Polyline {
         this.drawRightAngleLine(context);
     }
 
+    tap() {
+        if (!this.clickable) {
+            return;
+        }
+
+        if (this.isHighlight) {
+            this.onTap();
+        }
+        this.isHighlight = true;
+    }
+
     private drawRightAngleLine(context: any) {
         this.getRightAngleLinePaths();
+        // context.beginPath()
+        // context.setLineJoin('miter')
+        // context.setLineWidth(2)
+        // context.moveTo(130, 10)
+        // context.lineTo(220, 50)
+        // context.lineTo(130, 90)
+        // context.stroke()
 
+        // context.draw()
+        context.beginPath();
+        context.setLineJoin('miter');
         for (let i = 0; i < this.linePaths.length; i++) {
-            let path = this.linePaths[i];
+            let path = new LinePath(this.getScalePoint(this.linePaths[i].start),
+                this.getScalePoint(this.linePaths[i].end));
             if (!this.inVisualArea(path)) {
                 continue;
             }
 
-            context.beginPath();
             if (this.isDash) {
                 context.setLineDash([4, 6]);
             } else {
                 context.setLineDash([]);
             }
-            context.setLineWidth(this.lineWidth);
+            context.setLineWidth(this.isHighlight ? this.highlightStyle.lineWidth : this.lineWidth);
+
             if (i === 0) {
                 context.moveTo(path.start.x, path.start.y);
             } else {
@@ -43,8 +65,8 @@ export class RightAnglePolyline extends Polyline {
             } else {
                 context.setStrokeStyle(this.lineColor);
             }
-            context.stroke();
         }
+        context.stroke();
     }
 
     private getRightAngleLinePaths() {

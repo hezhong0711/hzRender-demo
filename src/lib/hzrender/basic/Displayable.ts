@@ -26,6 +26,15 @@ export abstract class Displayable extends EventFul {
 
     abstract pan(scaleInfo: ScaleInfo): void;
 
+    unTap() {
+
+    }
+
+    tap() {
+        console.log('123123');
+        this.onTap();
+    }
+
     getScaleLength(length: number) {
         if (this.scaleType == ScaleType.SHAPE) {
             return length * this.scaleInfo.scale;

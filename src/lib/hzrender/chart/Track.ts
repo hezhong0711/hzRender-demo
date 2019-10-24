@@ -1,5 +1,5 @@
 import {Chart, ChartCfg, ChartModal} from "@/lib/hzrender/basic/Chart";
-import {Line, LinePath, Point} from "@/lib/hzrender/unit/Point";
+import {Line, Point} from "@/lib/hzrender/unit/Point";
 import {Circle} from "@/lib/hzrender/shape/Circle";
 import {ScaleType} from "@/lib/hzrender/basic/Displayable";
 import {RightAnglePolyline} from "@/lib/hzrender/shape/polyline/RightAnglePolyline";
@@ -38,18 +38,28 @@ export class Track extends Chart {
     }
 
     process(data: Array<any>) {
-        // data
+        // 转换数据
         for (let item of data.slice(0, MAX_DATA_SIZE)) {
             this.trackModals.push(TrackModal.mapper(item as TrackDataModal));
         }
 
+        // 切分数据
         this.splitTrackModal();
 
+        // 自适应计算
         let points = this.trackModals.map((v) => {
             return v.point
         });
         this.selfAdaptation.adapt(points);
 
+
+        let startK = Line.calcK(this.solidLinePoints[0][0], this.solidLinePoints[0][1]);
+        this.drawSolidLine(startK);
+        this.drawDashLine(startK);
+        this.drawAllPoints();
+    }
+
+    private drawAllPoints() {
         for (let modal of this.trackModals) {
             this.hz.add(new Circle({
                 cx: modal.point.x * this.selfAdaptation.scaleX + this.selfAdaptation.offsetX,
@@ -62,14 +72,15 @@ export class Track extends Chart {
                 }
             }));
         }
+    }
 
-        let startK = Line.calcK(this.solidLinePoints[0][0], this.solidLinePoints[0][1]);
+    private drawSolidLine(startK: number) {
         this.solidLinePoints.forEach(points => {
             let adaptPoints = points.map((p) => {
                 return this.selfAdaptation.adaptPoint(p);
             });
             if (adaptPoints.length > 1) {
-                this.hz.add(new RightAnglePolyline({
+                let rap = new RightAnglePolyline({
                     startK: startK,
                     points: adaptPoints,
                     lineWidth: 2,
@@ -78,12 +89,17 @@ export class Track extends Chart {
                     // isDash: true,
                     lineColor: 'blue',
                     scaleType: ScaleType.POSITION,
-                    onTap: () => console.log('click polyline')
-                }));
+                    clickable: true,
+                    onTap: () => {
+                        console.log('go to');
+                    }
+                });
+                this.hz.add(rap);
             }
         });
+    }
 
-
+    private drawDashLine(startK: number) {
         this.dashLinePoints.forEach(points => {
             let adaptPoints = points.map((p) => {
                 return this.selfAdaptation.adaptPoint(p);
@@ -104,7 +120,7 @@ export class Track extends Chart {
         });
     }
 
-    splitTrackModal() {
+    private splitTrackModal() {
         let idx: [number, number] = [0, 0];
         let lastReadType: ReadType = '0';
         for (let i = 0; i < this.trackModals.length; i++) {

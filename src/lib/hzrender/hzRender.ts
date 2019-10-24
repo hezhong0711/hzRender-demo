@@ -70,16 +70,17 @@ export class hzRender {
     }
 
     private onTap(x: number, y: number) {
-
+        let hasFindOne = false;
         for (let i = this.list.length - 1; i >= 0; i--) {
             let obj = this.list[i];
-            if (obj.contain(x, y)) {
-                if (obj.onTap) {
-                    obj.onTap();
-                }
-                break;
+            if (!hasFindOne && obj.contain(x, y)) {
+                obj.tap();
+                hasFindOne = true;
+            } else {
+                obj.unTap();
             }
         }
+        this.render();
     }
 
     private onPan(scaleInfo: ScaleInfo) {

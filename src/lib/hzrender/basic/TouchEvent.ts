@@ -66,7 +66,7 @@ export class TouchEvent {
 
         this.anyTouch.on('tap', ev => {
             console.log('tap');
-            console.log(ev.x, ev.y);
+            // console.log(ev.x, ev.y);
             this.requestAnimationFrame(ev.timestamp, () => {
                 if (this.onTap) {
                     this.onTap(ev.x, ev.y, this.scaleInfo.scale);
