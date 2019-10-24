@@ -2,7 +2,7 @@ import {Chart, ChartCfg, ChartModal} from "@/lib/hzrender/basic/Chart";
 import {Line, LinePath, Point} from "@/lib/hzrender/unit/Point";
 import {Circle} from "@/lib/hzrender/shape/Circle";
 import {ScaleType} from "@/lib/hzrender/basic/Displayable";
-import {Polyline} from "@/lib/hzrender/shape/Polyline";
+import {RightAnglePolyline} from "@/lib/hzrender/shape/polyline/RightAnglePolyline";
 
 const colorList = [
     'rgba(151,0,237,1)',
@@ -21,8 +21,8 @@ const MAX_DATA_SIZE = 30;
 
 export class Track extends Chart {
     trackModals: Array<TrackModal> = [];
-    solidLinePaths: Array<LinePath> = [];
-    dashLinePaths: Array<LinePath> = [];
+    solidLinePoints: Array<Array<Point>> = [];
+    dashLinePoints: Array<Array<Point>> = [];
 
     constructor(cfg: TrackCfg) {
         super(cfg);
@@ -30,17 +30,21 @@ export class Track extends Chart {
         this.selfAdaptation.paddingTop = cfg.paddingTop ? cfg.paddingTop : RADIOUS;
         this.selfAdaptation.paddingLeft = cfg.paddingLeft ? cfg.paddingLeft : RADIOUS;
         this.selfAdaptation.paddingBottom = cfg.paddingBottom ? cfg.paddingBottom : RADIOUS;
-        this.processPoint(cfg.data);
+        this.process(cfg.data);
 
         console.log(this.trackModals);
-        console.log(this.solidLinePaths);
-        console.log(this.dashLinePaths);
+        console.log(this.solidLinePoints);
+        console.log(this.dashLinePoints);
     }
 
-    processPoint(data: Array<any>) {
+    process(data: Array<any>) {
+        // data
         for (let item of data.slice(0, MAX_DATA_SIZE)) {
             this.trackModals.push(TrackModal.mapper(item as TrackDataModal));
         }
+
+        this.splitTrackModal();
+
         let points = this.trackModals.map((v) => {
             return v.point
         });
@@ -58,102 +62,105 @@ export class Track extends Chart {
                 }
             }));
         }
-        this.calcAllPoint();
-        this.solidLinePaths.forEach(path => {
-            let start = this.selfAdaptation.adaptPoint(path.start);
-            let end = this.selfAdaptation.adaptPoint(path.end);
-            this.hz.add(new Polyline({
-                points: [start, end],
-                lineWidth: 2,
-                smooth: 0,
-                lineGradient: true,
-                // isDash: true,
-                lineColor: 'blue',
-                scaleType: ScaleType.POSITION,
-                onTap: () => console.log('click polyline')
-            }));
-            // console.log(start, end);
+
+        let startK = Line.calcK(this.solidLinePoints[0][0], this.solidLinePoints[0][1]);
+        this.solidLinePoints.forEach(points => {
+            let adaptPoints = points.map((p) => {
+                return this.selfAdaptation.adaptPoint(p);
+            });
+            if (adaptPoints.length > 1) {
+                this.hz.add(new RightAnglePolyline({
+                    startK: startK,
+                    points: adaptPoints,
+                    lineWidth: 2,
+                    smooth: 1,
+                    // lineGradient: true,
+                    // isDash: true,
+                    lineColor: 'blue',
+                    scaleType: ScaleType.POSITION,
+                    onTap: () => console.log('click polyline')
+                }));
+            }
         });
-        this.dashLinePaths.forEach(path => {
-            let start = this.selfAdaptation.adaptPoint(path.start);
-            let end = this.selfAdaptation.adaptPoint(path.end);
-            this.hz.add(new Polyline({
-                points: [start, end],
-                lineWidth: 2,
-                smooth: 0,
-                lineGradient: true,
-                isDash: true,
-                lineColor: 'blue',
-                scaleType: ScaleType.POSITION,
-                onTap: () => console.log('click polyline')
-            }));
-            // console.log(start, end);
+
+
+        this.dashLinePoints.forEach(points => {
+            let adaptPoints = points.map((p) => {
+                return this.selfAdaptation.adaptPoint(p);
+            });
+            if (adaptPoints.length > 1) {
+                this.hz.add(new RightAnglePolyline({
+                    startK: startK,
+                    points: adaptPoints,
+                    lineWidth: 2,
+                    smooth: 1,
+                    // lineGradient: true,
+                    isDash: true,
+                    lineColor: 'blue',
+                    scaleType: ScaleType.POSITION,
+                    onTap: () => console.log('click polyline')
+                }));
+            }
         });
+    }
+
+    splitTrackModal() {
+        let idx: [number, number] = [0, 0];
+        let lastReadType: ReadType = '0';
+        for (let i = 0; i < this.trackModals.length; i++) {
+            let modal = this.trackModals[i];
+            // readType 与上一次 readType相同，加入到上一次的容器中
+            if (lastReadType === modal.readType ||
+                (lastReadType === '0' && modal.readType === '1')) {
+                this.addLinePathPoint(lastReadType, modal.point, idx);
+            }
+            // 如果不相同，则要在上一个容器中添加，然后在另一个容器中新添加意向
+            else {
+                this.addLinePathPoint(lastReadType, modal.point, idx);
+                switch (modal.readType) {
+                    case '0':
+                    case '1':
+                        idx[0]++;
+                        break;
+                    case '2':
+                        idx[1]++;
+                        break;
+                }
+                this.addLinePathPoint(modal.readType, modal.point, idx);
+            }
+            lastReadType = modal.readType;
+        }
+    }
+
+    private addLinePathPoint(readType: ReadType, point: Point, idx: [number, number]) {
+        switch (readType) {
+            case '0':
+            case '1': {
+                let arr = this.solidLinePoints[idx[0]];
+                if (arr == null) {
+                    arr = [point];
+                } else {
+                    arr.push(point);
+                }
+                this.solidLinePoints[idx[0]] = arr;
+            }
+                break;
+            case '2': {
+                let arr = this.dashLinePoints[idx[1]];
+                if (arr == null) {
+                    arr = [point];
+                } else {
+                    arr.push(point);
+                }
+                this.dashLinePoints[idx[1]] = arr;
+            }
+                break;
+
+        }
     }
 
     render() {
         this.hz.render();
-    }
-
-    private calcAllPoint() {
-        let line = Line.getLine(this.trackModals[0].point, this.trackModals[1].point);
-        let start = null;
-        let end = null;
-        let foot = null;
-        for (let i = 0; i < MAX_DATA_SIZE; i++) {
-            let item = this.trackModals[i];
-            // item.readType *= 1;
-            if (start != null) {
-                end = item;
-                let isDash = end.readType === '2';
-                foot = this.drawLinkTemp(start, end, line.k, foot, isDash);
-                start = end;
-            } else {
-                start = item;
-            }
-        }
-    }
-
-    private drawLinkTemp(start: TrackModal, end: TrackModal, k: number, pFoot: Point, isDash: boolean) {
-
-        let p1: TrackModal = start;
-        let p2: TrackModal = end;
-        // 垂足1
-        let line1: Line = Line.getLineByK(p2.point, k);
-        let p3: Point = line1.calcFootPoint(p1.point);
-        // 垂足2
-
-        let line2: Line = Line.getLineByK(p1.point, k);
-        let p4: Point = line2.calcFootPoint(p2.point);
-        let p: Point = null;
-        if (start.readType === '0') {
-            p = p1.point;
-            let path = new LinePath(p1.point, p2.point);
-            this.addLinePath(isDash, path);
-        } else if (pFoot && (p1.point.x > pFoot.x && p4.x > p1.point.x || p1.point.x < pFoot.x && p4.x < p1.point.x)) {
-            p = p4;
-            let path1 = new LinePath(p1.point, p4);
-            let path2 = new LinePath(p4, p2.point);
-
-            this.addLinePath(isDash, path1);
-            this.addLinePath(isDash, path2);
-        } else {
-            p = p3;
-            let path1 = new LinePath(p1.point, p3);
-            let path2 = new LinePath(p3, p2.point);
-            this.addLinePath(isDash, path1);
-            this.addLinePath(isDash, path2);
-        }
-
-        return p;
-    }
-
-    private addLinePath(isDash: boolean, path: LinePath) {
-        if (isDash) {
-            this.dashLinePaths.push(path);
-        } else {
-            this.solidLinePaths.push(path);
-        }
     }
 }
 

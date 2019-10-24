@@ -85,7 +85,7 @@ export class Polyline extends Displayable {
         for (let i = 0; i < this.linePaths.length; i++) {
             let path = this.linePaths[i];
             if (!this.inVisualArea(path)) {
-                console.log('line is out of visual area');
+                // console.log('line is out of visual area');
                 continue;
             }
 
@@ -120,7 +120,7 @@ export class Polyline extends Displayable {
         for (let i = 0; i < this.catMullPaths.length; i++) {
             let path = this.catMullPaths[i];
             if (!this.inVisualArea(path)) {
-                console.log('cat mull curve is out of visual area');
+                // console.log('cat mull curve is out of visual area');
                 continue;
             }
             context.beginPath();
@@ -216,7 +216,7 @@ export class Polyline extends Displayable {
 
 }
 
-interface PolylineCfg extends DisplayableCfg {
+export interface PolylineCfg extends DisplayableCfg {
     points: Array<Point>;
     isDash?: boolean;
     lineWidth?: number;
