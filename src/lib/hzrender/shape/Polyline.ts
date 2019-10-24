@@ -46,9 +46,9 @@ export class Polyline extends Displayable {
                 && !this.isLineInVisualArea(linePath.toLine()));
         }
 
-        return !this.isPointInVisualArea(linePath.start)
+        return !(!this.isPointInVisualArea(linePath.start)
             && !this.isPointInVisualArea(linePath.end)
-            && !this.isLineInVisualArea(linePath.toLine());
+            && !this.isLineInVisualArea(linePath.toLine()));
     }
 
     draw(context: any): void {
@@ -85,6 +85,7 @@ export class Polyline extends Displayable {
         for (let i = 0; i < this.linePaths.length; i++) {
             let path = this.linePaths[i];
             if (!this.inVisualArea(path)) {
+                console.log('line is out of visual area');
                 continue;
             }
 
