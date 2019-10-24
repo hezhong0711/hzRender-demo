@@ -39,6 +39,12 @@ export class SelfAdaptation {
         this.offsetY = this.paddingTop - minY * this.scaleY;
     }
 
+    adaptPoint(point: Point) {
+        return new Point(point.x * this.scaleX + this.offsetX,
+            point.y * this.scaleY + this.offsetY,
+            point.color);
+    }
+
     static getMin(a: number, b: number) {
         return a > b ? b : a;
     }
