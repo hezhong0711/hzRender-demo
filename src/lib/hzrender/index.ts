@@ -1,12 +1,13 @@
-import {hzRender} from "@/lib/hzrender/hzRender";
-import {Circle} from "@/lib/hzrender/shape/Circle";
-import {Rect} from "@/lib/hzrender/shape/Rect";
-import {Polyline} from "@/lib/hzrender/shape/Polyline";
-import {Point} from "@/lib/hzrender/unit/Point";
-import {ScaleType} from "@/lib/hzrender/basic/Displayable";
-import {ScaleInfo} from "@/lib/hzrender/basic/ScaleInfo";
+import {Circle} from "hzrender/lib/shape/Circle";
+import {hzRender} from "hzrender/lib/hzRender";
+import {ScaleType} from "hzrender/lib/basic/Displayable";
+import {Rect} from "hzrender/lib/shape/Rect";
+import {Point} from "hzrender/lib/unit/Point";
+import {ScaleInfo} from "hzrender/lib/basic/ScaleInfo";
+import {LinePolyline} from "hzrender/lib/shape/polyline/LinePolyline";
+import {Track} from "hzrender/lib/chart/Track";
 import tracks from "../../data/tracks.json";
-import {Track} from "@/lib/hzrender/chart/Track";
+import {CatMullCurvePolyline} from "hzrender/lib/shape/polyline/CatMullCurvePolyline";
 
 export let drawIndex = () => {
     let hz = new hzRender({
@@ -42,7 +43,7 @@ export let drawIndex = () => {
     // points.push(new Point(5, 23, '#229922'));
     points.push(new Point(120, 133));
 
-    let polyline = new Polyline({
+    let polyline = new CatMullCurvePolyline({
         zIndex: 100,
         points: points,
         lineWidth: 2,

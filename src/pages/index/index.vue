@@ -12,7 +12,7 @@
 <script lang="ts">
     import Vue from 'vue';
     import {drawIndex} from "@/lib/hzrender";
-    import EventFul, {EventType} from "@/lib/hzrender/basic/EventFul";
+    import EventFul, {EventType} from "hzrender/lib/basic/EventFul";
 
     export default Vue.extend({
         data() {

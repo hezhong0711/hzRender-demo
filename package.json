@@ -34,6 +34,7 @@
     "@dcloudio/uni-mp-weixin": "^2.0.0-23320190923002",
     "@dcloudio/uni-stat": "^2.0.0-23320190923002",
     "any-touch": "^0.4.11",
+    "hzrender": "^0.4.0",
     "flyio": "^0.6.2",
     "regenerator-runtime": "^0.12.1",
     "vue": "^2.6.10",
