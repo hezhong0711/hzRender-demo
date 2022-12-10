@@ -1523,10 +1523,22 @@ ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
+any-event@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/any-event/-/any-event-0.4.1.tgz#538a2c5ae66f587a85cc48c0438c021b2c61d352"
+  integrity sha512-MWCIcDOp2bcIVV+h7hvA/XetUpwx8zTC3GJIAEZ80zfrZ6Ghbio6ZOiKVFkZT4/cBKC0MCeefuqPPsL9Q4S1sQ==
+
 any-promise@^1.0.0:
   version "1.3.0"
   resolved "https://registry.npm.taobao.org/any-promise/download/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
   integrity sha1-q8av7tzqUugJzcA3au0845Y10X8=
+
+any-touch@^0.4.11:
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/any-touch/-/any-touch-0.4.11.tgz#f8620b04bfbc508830665b192c9690c681bafd9c"
+  integrity sha512-4zK09rzR4m3qi18k18sCbRhnwPQ2ZjfcJEqrWru+arFe1MMDcR6O3KxJ4yhTFabVHHyQ1eRWHHIdCiDhojKbsw==
+  dependencies:
+    any-event "^0.4.1"
 
 anymatch@^2.0.0:
   version "2.0.0"
@@ -4087,6 +4099,14 @@ https-browserify@^1.0.0:
   resolved "https://registry.npm.taobao.org/https-browserify/download/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
   integrity sha1-7AbBDgo0wPL68Zn3/X/Hj//QPHM=
 
+hzrender@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/hzrender/-/hzrender-0.4.0.tgz#1973e57acd6344cebdd5a58774b19c18aa5d1495"
+  integrity sha512-WwWE/UdGBMMUQH291QkIX7C4QS0d13TYkzHIddzWr0lNFq5d1j23InfnwtXK7feHRho/f/3K6d0fqmIiZWXB4g==
+  dependencies:
+    any-touch "^0.4.11"
+    lodash "^4.17.15"
+
 iconv-lite@0.4.24, iconv-lite@^0.4.4:
   version "0.4.24"
   resolved "https://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.4.24.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ficonv-lite%2Fdownload%2Ficonv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -6342,9 +6362,9 @@ qs@6.7.0:
   integrity sha1-QdwaAV49WB8WIXdr4xr7KHapsbw=
 
 qs@~6.5.2:
-  version "6.5.2"
-  resolved "https://registry.npm.taobao.org/qs/download/qs-6.5.2.tgz?cache=0&sync_timestamp=1569207136481&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fqs%2Fdownload%2Fqs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
-  integrity sha1-yzroBuh0BERYTvFUzo7pjUA/PjY=
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.3.tgz#3aeeffc91967ef6e35c0e488ef46fb296ab76aad"
+  integrity sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA==
 
 query-string@^4.1.0:
   version "4.3.4"
